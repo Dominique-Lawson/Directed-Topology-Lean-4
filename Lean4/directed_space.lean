@@ -1,4 +1,4 @@
-import Mathlib.Topology.PathConnected
+import Mathlib.Topology.Connected.PathConnected
 
 /-
   # Definition of directed spaces
