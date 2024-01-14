@@ -25,7 +25,7 @@ class DirectedSpace (α : Type u) extends TopologicalSpace α where
 
 section DirectedSpace
 
-variable {α : Type u} {x y z : α} [DirectedSpace α] {γ : Path x y}  {γ' : Path y z} {t₀ t₁ : I} {f : Path t₀ t₁} 
+variable {α : Type u} {x y z : α} [DirectedSpace α] {γ : Path x y}  {γ' : Path y z} {t₀ t₁ : I} {f : Path t₀ t₁}
 
 def IsDipath : (Path x y) → Prop :=
   DirectedSpace.IsDipath
@@ -37,7 +37,7 @@ def isDipath_concat (hγ : IsDipath γ) (hγ' : IsDipath γ') : IsDipath (γ.tra
   DirectedSpace.isDipath_concat hγ hγ'
 
 def isDipath_reparam (hfmono : Monotone f) (hγ : IsDipath γ) : IsDipath (f.map γ.continuous_toFun) :=
-  DirectedSpace.isDipath_reparam  hfmono hγ
+  DirectedSpace.isDipath_reparam hfmono hγ
 
 /-- Casting a path that is directed into another path gives another directed path -/
 lemma is_dipath_cast {x y x' y' : α} (γ : Path x y) (hx : x' = x) (hy : y' = y) (hγ : IsDipath γ) :
