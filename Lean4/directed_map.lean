@@ -59,7 +59,7 @@ instance toDirectedMapClass : DirectedMapClass D(α, β) α β where
   map_directed := fun f => f.directed_toFun
 
 /-- Helper instance for when there's too many metavariables to apply `FunLike.hasCoeToFun` directly. -/
-instance : CoeFun (D(α, β)) fun _ => α → β := by exact DFunLike.hasCoeToFun
+instance : CoeFun (D(α, β)) fun _ => α → β := DFunLike.hasCoeToFun
 
 /-- A directed map can be coerced into a continuous map -/
 instance : Coe D(α, β) C(α, β) := ⟨fun f => f.toContinuousMap⟩

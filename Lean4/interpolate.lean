@@ -15,15 +15,15 @@ section
 lemma interp_mem_I (T a b : I) : (σ T : ℝ) * ↑a + ↑T * ↑b ∈ I := by
     constructor
 
-    calc
-      (0 : ℝ) = ↑(σ T) * 0 + ↑T * 0 := by simp
-            _ ≤ ↑(σ T) * a + ↑T * 0 := add_le_add_right (mul_le_mul (le_refl (σ T : ℝ)) a.2.1 (le_refl 0) (σ T).2.1) (↑T * 0)
-            _ ≤ ↑(σ T) * a + ↑T * b := add_le_add_left (mul_le_mul (le_refl ↑T) b.2.1 (le_refl 0) T.2.1) (↑(σ T) * ↑a)
+    calc (0 : ℝ)
+        _ = ↑(σ T) * 0 + ↑T * 0 := by simp
+        _ ≤ ↑(σ T) * a + ↑T * 0 := add_le_add_right (mul_le_mul (le_refl (σ T : ℝ)) a.2.1 (le_refl 0) (σ T).2.1) (↑T * 0)
+        _ ≤ ↑(σ T) * a + ↑T * b := add_le_add_left (mul_le_mul (le_refl ↑T) b.2.1 (le_refl 0) T.2.1) (↑(σ T) * ↑a)
 
-    calc -- TODO: Remove "by exact"? For some reason Lean does not allow it.
-      (σ T : ℝ) * ↑a + ↑T * ↑b ≤ ↑(σ T) * 1 + ↑T * ↑b := by exact add_le_add_right (mul_le_mul (le_refl (σ T : ℝ)) a.2.2 a.2.1 (σ T).2.1) (↑T * ↑b)
-            _ ≤ ↑(σ T) * 1 + ↑T * 1 := add_le_add_left (mul_le_mul (le_refl ↑T) b.2.2 b.2.1 T.2.1) (↑(σ T) * 1)
-            _ = 1 := by simp
+    calc (σ T : ℝ) * ↑a + ↑T * ↑b
+        _ ≤ ↑(σ T) * 1 + ↑T * ↑b  := add_le_add_right (mul_le_mul (le_refl (σ T : ℝ)) a.2.2 a.2.1 (σ T).2.1) (↑T * ↑b)
+        _ ≤ ↑(σ T) * 1 + ↑T * 1   := add_le_add_left (mul_le_mul (le_refl ↑T) b.2.2 b.2.1 T.2.1) (↑(σ T) * 1)
+        _ = 1                     := by simp
 
 lemma interp_left_mem_I (T a : I) : (σ T : ℝ) * ↑a + ↑T ∈ I := by
   convert interp_mem_I T a 1
@@ -36,10 +36,11 @@ lemma interp_right_mem_I (T b : I) : (σ T : ℝ) + ↑T * ↑b ∈ I := by
 lemma interp_const_le_of_le_of_le {a b T₀ T₁ : I} (hab : a ≤ b) (hT : T₀ ≤ T₁) :
   ((σ T₀ : ℝ) * ↑a + ↑T₀ * ↑b) ≤ (σ T₁ : ℝ) * ↑a + ↑T₁ * ↑b := by
   have h₁ : (T₀ : ℝ) * (b - a) ≤ T₁ * (b - a) := mul_le_mul_of_nonneg_right hT (sub_nonneg_of_le hab)
-  calc
-    (1 - T₀ : ℝ) * (a : ℝ) + (T₀ : ℝ) * (b : ℝ) = (a : ℝ) + ↑T₀ * (b - a) := by ring
-      _ ≤ ↑a + ↑T₁ * (b - a) := add_le_add_left h₁ a
-      _ = (1 - T₁ : ℝ) * (a : ℝ) + (T₁ : ℝ) * (b : ℝ) := by ring
+
+  calc (1 - T₀ : ℝ) * (a : ℝ) + (T₀ : ℝ) * (b : ℝ)
+      _ = (a : ℝ) + ↑T₀ * (b - a)                        := by ring
+      _ ≤ ↑a + ↑T₁ * (b - a)                             := add_le_add_left h₁ a
+      _ = (1 - T₁ : ℝ) * (a : ℝ) + (T₁ : ℝ) * (b : ℝ)   := by ring
 
 def interpolate_const (a b : I) : C(I, I) where
   toFun := fun t => ⟨_, interp_mem_I t a b⟩
@@ -88,13 +89,13 @@ lemma directed_interpolate (h : ∀ t, f t ≤ g t) : DirectedMap.Directed (inte
 
   apply Subtype.coe_le_coe.mp
 
-  calc
-    (interpolate f g (γ x) : ℝ) = (1 - a₀ : ℝ) * (f a₁ : ℝ) + (a₀ : ℝ) * (g a₁ : ℝ) := by rfl
-                          _  = ↑(f a₁) + ↑a₀ * (g a₁ - f a₁) := by ring
-                          _  ≤ ↑(f a₁) + ↑b₀ * (g a₁ - f a₁) := add_le_add_left h₁ ↑(f a₁)
-                          _  = (1 - b₀ : ℝ) * (f a₁ : ℝ) + (b₀ : ℝ) * (g a₁ : ℝ) := by ring
-                          _  ≤ (1 - b₀ : ℝ) * (f b₁ : ℝ) + (b₀ : ℝ) * (g a₁ : ℝ) := add_le_add_right (mul_le_mul_of_nonneg_left hfab (by unit_interval)) ((b₀ : ℝ) * (g a₁ : ℝ))
-                          _  ≤ (1 - b₀ : ℝ) * (f b₁ : ℝ) + (b₀ : ℝ) * (g b₁ : ℝ) := add_le_add_left (mul_le_mul_of_nonneg_left hgab (by unit_interval)) ((1 - b₀ : ℝ) * (f b₁ : ℝ))
-                          _  = (interpolate f g (γ y) : ℝ) := rfl
+  calc (interpolate f g (γ x) : ℝ)
+      _  = (1 - a₀ : ℝ) * (f a₁ : ℝ) + (a₀ : ℝ) * (g a₁ : ℝ) := by rfl
+      _  = ↑(f a₁) + ↑a₀ * (g a₁ - f a₁)                      := by ring
+      _  ≤ ↑(f a₁) + ↑b₀ * (g a₁ - f a₁)                      := add_le_add_left h₁ ↑(f a₁)
+      _  = (1 - b₀ : ℝ) * (f a₁ : ℝ) + (b₀ : ℝ) * (g a₁ : ℝ) := by ring
+      _  ≤ (1 - b₀ : ℝ) * (f b₁ : ℝ) + (b₀ : ℝ) * (g a₁ : ℝ) := add_le_add_right (mul_le_mul_of_nonneg_left hfab (by unit_interval)) ((b₀ : ℝ) * (g a₁ : ℝ))
+      _  ≤ (1 - b₀ : ℝ) * (f b₁ : ℝ) + (b₀ : ℝ) * (g b₁ : ℝ) := add_le_add_left (mul_le_mul_of_nonneg_left hgab (by unit_interval)) ((1 - b₀ : ℝ) * (f b₁ : ℝ))
+      _  = (interpolate f g (γ y) : ℝ) := rfl
 
 end

@@ -54,8 +54,7 @@ def DirectedSpace.Induced {α : Type u} {β : Type v} [TopologicalSpace α] [hβ
     rw [Path.map_trans γ₁ γ₂ hf]
     exact isDipath_concat hγ₁ hγ₂
   isDipath_reparam := fun {x y : α} γ t₀ t₁ φ hφ_mono hγ => by
-    have h := isDipath_reparam hφ_mono hγ
-    exact h -- TODO: Prevent unnecessary "have h"
+    exact isDipath_reparam hφ_mono hγ
 
 instance DirectedSubspace {α : Type u} {p : α → Prop} [DirectedSpace α] :
   DirectedSpace (Subtype p) :=
