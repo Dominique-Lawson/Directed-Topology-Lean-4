@@ -59,7 +59,7 @@ instance : CoeFun (D(α, β)) fun _ => α → β := by exact FunLike.hasCoeToFun
 /-- A directed map can be coerced into a continuous map -/
 instance : Coe D(α, β) C(α, β) := ⟨fun f => f.toContinuousMap⟩
 
-@[simp] lemma to_fun_eq_coe {f : D(α, β)} : f.toFun = (f : α → β) := rfl
+@[simp] lemma toFun_eq_coe {f : D(α, β)} : f.toFun = (f : α → β) := rfl
 @[simp] lemma coe_to_continuous_map (f : D(α, β)) : ⇑f.toContinuousMap = f := rfl
 @[simp] protected lemma coe_coe {F : Type*} [DirectedMapClass F α β] (f : F) : ⇑(f : D(α, β)) = f := rfl
 
