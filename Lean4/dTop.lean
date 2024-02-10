@@ -33,7 +33,7 @@ instance instCoeSortdTopCatType: CoeSort dTopCat Type* := Bundled.coeSort
 
 instance directedSpaceUnbundled (x : dTopCat) : DirectedSpace x := x.str
 
-attribute [instance] ConcreteCategory.funLike in
+attribute [instance] ConcreteCategory.instFunLike in
 instance (X Y : dTopCat.{u}) : CoeFun (X ⟶ Y) fun _ => X → Y where
   coe f := f
 

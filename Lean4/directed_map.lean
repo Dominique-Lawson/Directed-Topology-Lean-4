@@ -28,7 +28,7 @@ notation "D("α","β")" => DirectedMap α β
 section
 
 class DirectedMapClass (F : Type*) (α β : outParam <| Type*) [DirectedSpace α] [DirectedSpace β]
-  extends ContinuousMapClass F α β where
+  [FunLike F α β] extends ContinuousMapClass F α β : Prop where
   map_directed (f : F) : DirectedMap.Directed (f : C(α, β))
 
 end
@@ -37,7 +37,7 @@ export DirectedMapClass (map_directed)
 
 section DirectedMapClass
 
-variable {F α β : Type*} [DirectedSpace α] [DirectedSpace β] [hF : DirectedMapClass F α β]
+variable {F α β : Type*} [DirectedSpace α] [DirectedSpace β] [FunLike F α β] [hF : DirectedMapClass F α β]
 @[coe] def toDirectedMap (f : F) : D(α, β) := ⟨f, map_directed f⟩
 instance : CoeTC F D(α, β) := ⟨toDirectedMap⟩
 
@@ -47,23 +47,28 @@ variable {α β γ δ : Type*} [DirectedSpace α] [DirectedSpace β] [DirectedSp
 
 namespace DirectedMap
 
-instance toDirectedMapClass : DirectedMapClass D(α, β) α β where
+instance instFunLike : FunLike D(α, β) α β where
   coe := fun f => f.toFun
-  coe_injective' f g h := by cases f; cases g; congr; exact ContinuousMap.ext (congrFun h)
+  coe_injective' f g h := by
+    obtain ⟨⟨_, _⟩, _⟩ := f
+    obtain ⟨⟨_, _⟩, _⟩ := g
+    congr
+
+instance toDirectedMapClass : DirectedMapClass D(α, β) α β where
   map_continuous := fun f => f.continuous_toFun
   map_directed := fun f => f.directed_toFun
 
 /-- Helper instance for when there's too many metavariables to apply `FunLike.hasCoeToFun` directly. -/
-instance : CoeFun (D(α, β)) fun _ => α → β := by exact FunLike.hasCoeToFun
+instance : CoeFun (D(α, β)) fun _ => α → β := by exact DFunLike.hasCoeToFun
 
 /-- A directed map can be coerced into a continuous map -/
 instance : Coe D(α, β) C(α, β) := ⟨fun f => f.toContinuousMap⟩
 
 @[simp] lemma toFun_eq_coe {f : D(α, β)} : f.toFun = (f : α → β) := rfl
 @[simp] lemma coe_to_continuous_map (f : D(α, β)) : ⇑f.toContinuousMap = f := rfl
-@[simp] protected lemma coe_coe {F : Type*} [DirectedMapClass F α β] (f : F) : ⇑(f : D(α, β)) = f := rfl
+@[simp] protected lemma coe_coe {F : Type*} [FunLike F α β] [DirectedMapClass F α β] (f : F) : ⇑(f : D(α, β)) = f := rfl
 
-@[ext] theorem ext {f g : D(α, β)} (h : ∀ x, f x = g x) : f = g := FunLike.ext f g h
+@[ext] theorem ext {f g : D(α, β)} (h : ∀ x, f x = g x) : f = g := DFunLike.ext f g h
 
 variable (α)
 

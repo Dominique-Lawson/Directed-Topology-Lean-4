@@ -42,12 +42,14 @@ def toDirectedMap (γ : Dipath x y) : D(I, X) where
 /-- To bypass the conversion to continuous_map -/
 -- def to_fun : (Dipath x y) → I → X := fun f => f.toFun
 
-instance Dipath.directedMapClass : DirectedMapClass (Dipath x y) I X where
+instance Dipath.instFunLike : FunLike (Dipath x y) I X where
   coe := fun γ => γ.toFun
   coe_injective' := fun γ γ' h => by
     obtain ⟨⟨⟨_, _⟩, _, _⟩, _⟩ := γ
     obtain ⟨⟨⟨_, _⟩, _, _⟩, _⟩ := γ'
     congr
+
+instance Dipath.directedMapClass : DirectedMapClass (Dipath x y) I X where
   map_continuous := fun γ => γ.continuous_toFun
   map_directed := fun γ => directed γ
 

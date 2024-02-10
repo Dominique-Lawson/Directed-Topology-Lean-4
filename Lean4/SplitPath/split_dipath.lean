@@ -43,13 +43,13 @@ lemma second_part_is_dipath {γ : Path x₀ x₁} (γ_dipath : IsDipath γ) {T :
   exact (mul_le_mul_left (sub_pos.mpr (Subtype.coe_lt_coe.mpr hT₁))).mpr hxy
 
 def first_part_dipath (γ : Dipath x₀ x₁) {T : I} (hT₀ : 0 < T) : Dipath x₀ (γ T) := {
-  FirstPart γ T with
-  dipath_toPath := by exact first_part_is_dipath γ.dipath_toPath hT₀
+  FirstPart (γ : Path x₀ x₁) T with
+  dipath_toPath := first_part_is_dipath γ.dipath_toPath hT₀
 }
 
 def second_part_dipath (γ : Dipath x₀ x₁) {T : I} (hT₁ : T < 1) : Dipath (γ T) x₁ := {
-  SecondPart γ T with
-  dipath_toPath := by exact second_part_is_dipath γ.dipath_toPath hT₁
+  SecondPart (γ : Path x₀ x₁) T with
+  dipath_toPath := second_part_is_dipath γ.dipath_toPath hT₁
 }
 
 lemma first_part_apply (γ : Dipath x₀ x₁) {T : I} (hT₀ : 0 < T) (t : I) :
