@@ -63,14 +63,14 @@ instance DirectedSubspace {α : Type u} {p : α → Prop} [DirectedSpace α] :
 
 section subtype
 
-lemma is_directed_induced {α : Type u} {β : Type v} [TopologicalSpace α] [hβ : DirectedSpace β]
+lemma directed_induced {α : Type u} {β : Type v} [TopologicalSpace α] [hβ : DirectedSpace β]
   (f : C(α, β)) :
   @DirectedMap.Directed α β (DirectedSpace.Induced f.continuous_toFun) hβ f := fun _ _ _ hγ => hγ
 
 def DirectedSubtypeInclusion  {α : Type u} (p : α → Prop) [DirectedSpace α] : D(Subtype p, α) where
   toFun := λ x => ↑x
   continuous_toFun := continuous_induced_dom
-  directed_toFun := is_directed_induced _
+  directed_toFun := directed_induced _
 
 def DirectedSubsetInclusion {α : Type u} [t : DirectedSpace α] {X Y : Set α} (h : X ⊆ Y) : D(X, Y) where
   toFun := Set.inclusion h

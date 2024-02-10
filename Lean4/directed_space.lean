@@ -40,7 +40,7 @@ def isDipath_reparam (hfmono : Monotone f) (hγ : IsDipath γ) : IsDipath (f.map
   DirectedSpace.isDipath_reparam hfmono hγ
 
 /-- Casting a path that is directed into another path gives another directed path -/
-lemma is_dipath_cast {x y x' y' : α} (γ : Path x y) (hx : x' = x) (hy : y' = y) (hγ : IsDipath γ) :
+lemma isDipath_cast {x y x' y' : α} (γ : Path x y) (hx : x' = x) (hy : y' = y) (hγ : IsDipath γ) :
   IsDipath (γ.cast hx hy) := by
     subst_vars
     convert hγ
