@@ -53,7 +53,7 @@ def stretch_down_path {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₀ : (2⁻¹ :
     source' := by simp [γ.source']
     target' := by simp [γ.target']
 
-lemma stretch_down_is_dipath {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₀ : (2⁻¹ : ℝ) ≤ ↑t₀) :
+lemma isDipath_stretch_down {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₀ : (2⁻¹ : ℝ) ≤ ↑t₀) :
   IsDipath (stretch_down_path γ ht₀) := by
   intros x y hxy
   unfold stretch_down_path
@@ -64,6 +64,6 @@ def stretch_down {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₀ : (2⁻¹ : ℝ)
   (⟨2 * ↑t₀ - 1, double_sub_one_mem_I ht₀⟩ : I)
   ⟨2 * ↑t₁ - 1, by { rw [←γ.target']; exact double_sub_one_mem_I_of_bounded 1 γ ht₀ }⟩ where
     toPath := stretch_down_path γ ht₀
-    dipath_toPath := stretch_down_is_dipath γ ht₀
+    dipath_toPath := isDipath_stretch_down γ ht₀
 
 end Dipath

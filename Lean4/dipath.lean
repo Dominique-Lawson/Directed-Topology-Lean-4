@@ -98,8 +98,7 @@ because it is a composition of multiple projections. -/
 def simps.apply : I → X :=
   γ
 
--- TODO: Verify that this is correct (see PathConnected.lean)
-initialize_simps_projections Dipath (toFun → simps.apply, -toContinuousMap)
+initialize_simps_projections Dipath (toPath_toContinuousMap_toFun → simps.apply, -toPath_toContinuousMap)
 
 @[simp]
 lemma coe_toContinuousMap : ⇑γ.toContinuousMap = γ := rfl
