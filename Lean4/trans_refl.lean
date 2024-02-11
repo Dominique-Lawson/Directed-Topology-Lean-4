@@ -45,12 +45,12 @@ lemma directed_transReflReparamAux : DirectedMap.Directed
   · linarith
   · linarith
 
-def transReflReparamAuxMap : D(I, I) where
+def TransReflReparamAuxMap : D(I, I) where
   toFun := fun t => ⟨transReflReparamAux t, transReflReparamAux_mem_I t⟩
   directed_toFun := directed_transReflReparamAux
 
 lemma trans_refl_reparam_dipath (p : Dipath x₀ x₁) : p.trans (Dipath.refl x₁) =
-    p.reparam transReflReparamAuxMap (Subtype.ext transReflReparamAux_zero)
+    p.reparam TransReflReparamAuxMap (Subtype.ext transReflReparamAux_zero)
       (Subtype.ext transReflReparamAux_one) := by
   ext t
   have : (p.trans (Dipath.refl x₁)) t = p.toPath.trans (Path.refl x₁) t := rfl
@@ -75,19 +75,19 @@ lemma continuous_ReflTransReparamAux : Continuous ReflTransReparamAux := by
   intros x hx
   norm_num [hx]
 
-lemma ReflTransReparamAux_mem_I (t : I) : ReflTransReparamAux t ∈ I := by
+lemma reflTransReparamAux_mem_I (t : I) : ReflTransReparamAux t ∈ I := by
   unfold ReflTransReparamAux
   split_ifs <;> constructor <;> linarith [unitInterval.le_one t, unitInterval.nonneg t]
 
-lemma ReflTransReparamAux_zero : ReflTransReparamAux 0 = 0 :=
+lemma reflTransReparamAux_zero : ReflTransReparamAux 0 = 0 :=
 by norm_num [ReflTransReparamAux]
 
-lemma ReflTransReparamAux_one : ReflTransReparamAux 1 = 1 :=
+lemma reflTransReparamAux_one : ReflTransReparamAux 1 = 1 :=
 by norm_num [ReflTransReparamAux]
 
 
 lemma directed_ReflTransReparamAux : DirectedMap.Directed
-    ({ toFun := fun t => ⟨ReflTransReparamAux t, ReflTransReparamAux_mem_I t⟩} : C(I, I)) := by
+    ({ toFun := fun t => ⟨ReflTransReparamAux t, reflTransReparamAux_mem_I t⟩} : C(I, I)) := by
   apply DirectedUnitInterval.directed_of_monotone _
   intros x y hxy
   unfold ReflTransReparamAux
@@ -102,13 +102,13 @@ lemma directed_ReflTransReparamAux : DirectedMap.Directed
   · linarith
 
 def ReflTransReparamAuxMap : D(I, I) where
-  toFun := fun t => ⟨ReflTransReparamAux t, ReflTransReparamAux_mem_I t⟩
+  toFun := fun t => ⟨ReflTransReparamAux t, reflTransReparamAux_mem_I t⟩
   directed_toFun := directed_ReflTransReparamAux
 
 lemma refl_trans_reparam (p : Path x₀ x₁) :
     (Path.refl x₀).trans p =
-      p.reparam (fun t => ⟨ReflTransReparamAux t, ReflTransReparamAux_mem_I t⟩) (by continuity)
-        (Subtype.ext ReflTransReparamAux_zero) (Subtype.ext ReflTransReparamAux_one) := by
+      p.reparam (fun t => ⟨ReflTransReparamAux t, reflTransReparamAux_mem_I t⟩) (by continuity)
+        (Subtype.ext reflTransReparamAux_zero) (Subtype.ext reflTransReparamAux_one) := by
   ext
   unfold ReflTransReparamAux
   simp [Path.trans_apply, not_le, coe_to_fun, Function.comp_apply]
@@ -120,7 +120,7 @@ lemma refl_trans_reparam (p : Path x₀ x₁) :
 
 lemma refl_trans_reparam_dipath (p : Dipath x₀ x₁) : (Dipath.refl x₀).trans p =
     p.reparam ReflTransReparamAuxMap
-      (Subtype.ext ReflTransReparamAux_zero) (Subtype.ext ReflTransReparamAux_one) := by
+      (Subtype.ext reflTransReparamAux_zero) (Subtype.ext reflTransReparamAux_one) := by
   ext t
   have : ((Dipath.refl x₀).trans p) t =  (Path.refl x₀).trans p.toPath t := rfl
   rw [this, refl_trans_reparam p.toPath]
