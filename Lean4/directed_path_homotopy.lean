@@ -721,12 +721,12 @@ lemma comp_lift (P₀ : Dipath x₀ x₁) (P₁ : Dipath x₁ x₂) : ⟦P₀.tr
 
 /- The image of a dipath dihomotopy class `P₀` under a directed map `f`.
     This is `Dipath.map` descended to the quotient -/
-def Quotient.map_fn (P₀ : Dipath.Dihomotopic.Quotient x₀ x₁) (f : D(X, Y)) :
+def Quotient.mapFn (P₀ : Dipath.Dihomotopic.Quotient x₀ x₁) (f : D(X, Y)) :
   Dipath.Dihomotopic.Quotient (f x₀) (f x₁) :=
 Quotient.map (fun (q : Dipath x₀ x₁) => q.map f) (fun _ _ h => Dipath.Dihomotopic.map h f) P₀
 
 lemma map_lift (P₀ : Dipath x₀ x₁) (f : D(X, Y)) :
-  ⟦P₀.map f⟧ = Quotient.map_fn ⟦P₀⟧ f := rfl
+  ⟦P₀.map f⟧ = Quotient.mapFn ⟦P₀⟧ f := rfl
 
 lemma quot_reparam (γ : Dipath x₀ x₁) {f : D(I, I)} (hf₀ : f 0 = 0) (hf₁ : f 1 = 1) :
     @Eq (Dipath.Dihomotopic.Quotient _ _) ⟦γ.reparam f hf₀ hf₁⟧ ⟦γ⟧ := by
