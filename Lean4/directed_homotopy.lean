@@ -167,11 +167,11 @@ section trans_aux₁
 
 open SplitPath SplitDipath
 
-variable {t₀ t₁ : I} (γ : Dipath t₀ t₁) {T : I} (hT₀ : 0 < T) (hT₁ : T < 1)
-variable (ht₀ : (t₀ : ℝ) ≤ 2⁻¹) (ht₁ : 2⁻¹ ≤ (t₁ : ℝ)) (hT : γ T = half_I)
+variable {t₀ t₁ : I} (γ : Dipath t₀ t₁) {T : I}
+variable (hT : γ T = half_I)
 
-def FirstPartStretch : Dipath (⟨2 * (t₀.1 : ℝ), double_mem_I ht₀⟩ : I) (1 : I) where
-  toFun := Dipath.stretch_up (first_part_dipath γ hT₀) (by { convert le_refl (2⁻¹ : ℝ); simp [hT]; rfl })
+def FirstPartStretch (ht₀ : (t₀ : ℝ) ≤ 2⁻¹) : Dipath (⟨2 * (t₀.1 : ℝ), double_mem_I ht₀⟩ : I) (1 : I) where
+  toFun := Dipath.stretch_up (first_part_dipath γ T) (by { convert le_refl (2⁻¹ : ℝ); simp [hT]; rfl })
   source' := by simp
   target' := by {
     simp [hT]
@@ -181,8 +181,8 @@ def FirstPartStretch : Dipath (⟨2 * (t₀.1 : ℝ), double_mem_I ht₀⟩ : I)
   }
   dipath_toPath := Dipath.isDipath_stretch_up (_) (by { convert le_refl (2⁻¹ : ℝ); simp [hT]; rfl })
 
-def SecondPartStretch : Dipath (0 : I) ⟨2 * (t₁.1 : ℝ) - 1, double_sub_one_mem_I ht₁⟩ where
-  toFun := Dipath.stretch_down (second_part_dipath γ hT₁) (by { convert le_refl (2⁻¹ : ℝ); simp [hT]; rfl })
+def SecondPartStretch (ht₁ : 2⁻¹ ≤ (t₁ : ℝ)) : Dipath (0 : I) ⟨2 * (t₁.1 : ℝ) - 1, double_sub_one_mem_I ht₁⟩ where
+  toFun := Dipath.stretch_down (second_part_dipath γ T) (by { convert le_refl (2⁻¹ : ℝ); simp [hT]; rfl })
   source' := by {
     simp [hT]
     apply Subtype.coe_inj.mp
@@ -359,15 +359,15 @@ def trans {f₂ : D(X, Y)} (F : Dihomotopy f₀ f₁) (G: Dihomotopy f₁ f₂) 
     obtain ⟨hT₀, ⟨hT₁, hT_half⟩⟩ := hT
 
     /- Split γ into two parts (one with image in [0, 2⁻¹] × X, the other with image in [2⁻¹, 1] × X)-/
-    set a₁ := SplitDipath.first_part_dipath γ_as_dipath hT₀
-    set a₂ := SplitDipath.second_part_dipath γ_as_dipath hT₁
+    set a₁ := SplitDipath.first_part_dipath γ_as_dipath T
+    set a₂ := SplitDipath.second_part_dipath γ_as_dipath T
 
     /- Create two new paths, where the first coordinate is stretched and the second coordinate remains the same -/
-    set p₁ := FirstPartStretch γ₁ hT₀ hT₁ (le_of_lt ht₀) (le_of_lt ht₁) hT_half
-    set p₂ := SecondPartStretch γ₁ hT₀ hT₁ (le_of_lt ht₀) (le_of_lt ht₁) hT_half
+    set p₁ := FirstPartStretch γ₁ hT_half (le_of_lt ht₀)
+    set p₂ := SecondPartStretch γ₁ hT_half (le_of_lt ht₁)
 
-    set p₁' := SplitDipath.first_part_dipath γ₂ hT₀
-    set p₂' := SplitDipath.second_part_dipath γ₂ hT₁
+    set p₁' := SplitDipath.first_part_dipath γ₂ T
+    set p₂' := SplitDipath.second_part_dipath γ₂ T
 
     set q₁ := (Dipath.dipath_product p₁ p₁').map F.toDirectedMap
     set q₂ := (Dipath.dipath_product p₂ p₂').map G.toDirectedMap
@@ -376,7 +376,7 @@ def trans {f₂ : D(X, Y)} (F : Dihomotopy f₀ f₁) (G: Dihomotopy f₁ f₂) 
     have φ₀ : φ 0 = 0 := Subtype.ext (SplitPath.trans_reparam_zero T)
     have φ₁ : φ 1 = 1 := Subtype.ext (SplitPath.trans_reparam_one hT₁)
 
-    have hγT_eq_half : ((γ T).1 : ℝ) = 2⁻¹ := Subtype.coe_inj.mpr (hT_half)
+    have hγT_eq_half : ((γ T).1 : ℝ) = 2⁻¹ := Subtype.coe_inj.mpr hT_half
     have hγT_le_half : ((γ T).1 : ℝ) ≤ 2⁻¹ := le_of_eq hγT_eq_half
 
     set r₁ := q₁.cast (trans_apply_left F G t₀ x₀ (le_of_lt ht₀)) (trans_apply_half_left F G (γ T).1 (γ T).2 hT_half)
