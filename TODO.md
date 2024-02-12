@@ -6,7 +6,7 @@ The following files have been ported from Lean 3 to Lean 4:
 - [ ] cover_lemma.lean --> Cover of the unit square must be done once some form of fractions has been converted to Lean 4
 - [ ] dihomotopy_cover.lean
 - [x] dihomotopy_flip.lean
-- [ ] dihomotopy_to_path_dihomotopy.lean
+- [x] dihomotopy_to_path_dihomotopy.lean
 - [x] dipath.lean
 - [ ] dipath_subtype.lean
 - [x] directed_homotopy.lean
