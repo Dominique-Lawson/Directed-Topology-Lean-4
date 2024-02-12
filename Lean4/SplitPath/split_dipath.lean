@@ -59,9 +59,11 @@ def second_part_dipath (γ : Dipath x₀ x₁) (T : I) : Dipath (γ T) x₁ := {
   dipath_toPath := second_part_is_dipath γ.dipath_toPath T
 }
 
+@[simp]
 lemma first_part_apply (γ : Dipath x₀ x₁) (T t : I) :
   (first_part_dipath γ T) t = γ ⟨ T* t, unitInterval.mul_mem T.2 t.2⟩ := rfl
 
+@[simp]
 lemma second_part_apply (γ : Dipath x₀ x₁) (T t : I) :
   (second_part_dipath γ T) t = γ ⟨(σ T : ℝ) * (t : ℝ) + (T : ℝ), interp_left_mem_I T t⟩ := rfl
 
