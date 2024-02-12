@@ -1,0 +1,27 @@
+The following files have been ported from Lean 3 to Lean 4:
+
+- [x] all.lean --> all.lean
+- [ ] auxiliary.lean --> First part: monotone_path.lean, Second part: unit_interval_aux.lean, Third part (fractions): TODO
+- [x] constructions.lean
+- [ ] cover_lemma.lean
+- [ ] dihomotopy_cover.lean
+- [ ] dihomotopy_flip.lean
+- [ ] dihomotopy_to_path_dihomotopy.lean
+- [x] dipath.lean
+- [ ] dipath_subtype.lean
+- [x] directed_homotopy.lean
+- [x] directed_map.lean
+- [x] directed_path_homotopy.lean
+- [x] directed_space.lean
+- [x] directed_unit_interval.lean
+- [ ] directed_van_kampen.lean
+- [x] dTop.lean
+- [x] fundamental_category.lean
+- [x] interpolate.lean
+- [ ] morphism_aux.lean
+- [ ] path_cover.lean
+- [ ] pushout_alternative.lean
+- [ ] split_dihomotopy.lean
+- [ ] split_path.lean --> In directory SplitPath. Only section `split_properties` hasn't been converted
+- [x] stretch_path.lean
+- [x] trans_refl.lean
