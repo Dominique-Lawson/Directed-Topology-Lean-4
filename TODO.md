@@ -18,7 +18,7 @@ The following files have been ported from Lean 3 to Lean 4:
 - [x] dTop.lean
 - [x] fundamental_category.lean
 - [x] interpolate.lean
-- [ ] morphism_aux.lean
+- [x] morphism_aux.lean
 - [ ] path_cover.lean
 - [ ] pushout_alternative.lean
 - [ ] split_dihomotopy.lean
