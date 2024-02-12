@@ -4,7 +4,7 @@ import Lean4.SplitPath.split_path
 import Lean4.constructions
 import Lean4.cover_lemma
 import Lean4.dihomotopy_flip
-import Lean4.dihomotopy_to_path_homotopy
+import Lean4.dihomotopy_to_path_dihomotopy
 import Lean4.dipath
 import Lean4.directed_homotopy
 import Lean4.directed_map
