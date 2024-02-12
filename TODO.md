@@ -20,7 +20,7 @@ The following files have been ported from Lean 3 to Lean 4:
 - [x] interpolate.lean
 - [x] morphism_aux.lean
 - [ ] path_cover.lean
-- [ ] pushout_alternative.lean
+- [x] pushout_alternative.lean
 - [ ] split_dihomotopy.lean
 - [ ] split_path.lean --> In directory SplitPath. Only section `split_properties` hasn't been converted
 - [x] stretch_path.lean
