@@ -326,57 +326,62 @@ def hcomp (F : Dihomotopy p₀ q₀) (G : Dihomotopy p₁ q₁) :
     convert ((r₁.trans r₂).reparam φ φ₀ φ₁).dipath_toPath
     ext t
 
-    have hr₁a₁ : r₁.toPath = a₁.toPath.map Γ.continuous_toFun := sorry
-    /- TODO: Update to Lean4
-      ext x,
-      have : ((a₁ x).2 : ℝ) ≤ 2⁻¹ := le_trans (directed_path_bounded a₁.dipath_to_path.2).2 hγT_le_half,
-      calc r₁ x = F ((a₁ x).1, ⟨2 * ((a₁ x).2 : ℝ), double_mem_I this⟩) : rfl
-        ... = if h : ((a₁ x).2 : ℝ) ≤ 1/2
-                then F ((a₁ x).1, ⟨2 * ((a₁ x).2 : ℝ), by { apply double_mem_I, convert h, norm_num }⟩)
-                else G ((a₁ x).1, ⟨2 * ((a₁ x).2 : ℝ) - 1, by { apply double_sub_one_mem_I (le_of_lt _), convert h, norm_num }⟩)
-              : by simp [this]
-        ... = if h : ((a₁ x).2 : ℝ) ≤ 1/2
-                then Fₕ.eval (a₁ x).1 ⟨2 * ((a₁ x).2 : ℝ), by { apply double_mem_I, convert h, norm_num }⟩
-                else Gₕ.eval (a₁ x).1 ⟨2 * ((a₁ x).2 : ℝ) - 1, by { apply double_sub_one_mem_I (le_of_lt _), convert h, norm_num }⟩ : rfl
-        ... = (Fₕ.hcomp Gₕ) (a₁ x) : (path.homotopy.hcomp_apply Fₕ Gₕ (a₁ x)).symm
-        ... = Γ (a₁ x) : by rw Γ_def
-        ... = (a₁.to_path.map Γ.continuous_to_fun) x : rfl
-    -/
-    have hr₂a₂ : r₂.toPath = a₂.toPath.map Γ.continuous_toFun := sorry
-    /- TODO: Update to Lean4
-      ext,
-      have : 2⁻¹ ≤ ((a₂ x).2 : ℝ),
-      {
-        calc (2⁻¹ : ℝ) = ↑(γ T).2 : subtype.coe_inj.mpr hT_half.symm
-                   ... ≤  ↑(a₂ x).2 : (directed_path_bounded a₂.dipath_to_path.2).1
-      },
-      calc r₂.to_path x = G ((a₂ x).1, ⟨2 * ((a₂ x).2 : ℝ) - 1, double_sub_one_mem_I this⟩) : rfl
-            ... = if h : ((a₂ x).2 : ℝ) ≤ 1/2
-                    then F ((a₂ x).1, ⟨2 * ((a₂ x).2 : ℝ), by { apply double_mem_I, convert h, norm_num }⟩)
-                    else G ((a₂ x).1, ⟨2 * ((a₂ x).2 : ℝ) - 1,  by { apply double_sub_one_mem_I (le_of_lt _), convert h, norm_num }⟩) :
-                      by {
-                            split_ifs with h,
-                            {
-                              simp at h,
-                              have ha₂x : ((a₂ x).2 : ℝ) = 2⁻¹ := by linarith,
-                              simp [ha₂x],
-                            },
-                            refl,
-                         }
-            ... = if h : ((a₂ x).2 : ℝ) ≤ 1/2
-                    then Fₕ.eval (a₂ x).1 ⟨2 * ((a₂ x).2 : ℝ), by { apply double_mem_I, convert h, norm_num }⟩
-                    else Gₕ.eval (a₂ x).1 ⟨2 * ((a₂ x).2 : ℝ) - 1, by { apply double_sub_one_mem_I (le_of_lt _), convert h, norm_num }⟩ : rfl
-            ... = (Fₕ.hcomp Gₕ) (a₂ x) : (path.homotopy.hcomp_apply Fₕ Gₕ (a₂ x)).symm
-            ... = Γ (a₂ x) : by rw Γ_def
-            ... = (a₂.to_path.map Γ.continuous_to_fun) x : rfl
-    -/
-    have : γ t = ((a₁.trans a₂).reparam φ φ₀ φ₁) t := sorry
+    have hr₁a₁ : r₁.toPath = a₁.toPath.map Γ.continuous_toFun := by
+      ext x
+      have this : ((a₁ x).2 : ℝ) ≤ 2⁻¹ := le_trans (directed_path_bounded a₁.dipath_toPath.2 _).2 hγT_le_half
+      calc r₁ x
+        _ = F ((a₁ x).1, ⟨2 * ((a₁ x).2 : ℝ), double_mem_I this⟩)
+              := rfl
+        _ = if h : ((a₁ x).2 : ℝ) ≤ 1/2
+                then F ((a₁ x).1, ⟨2 * ((a₁ x).2 : ℝ), double_mem_I this⟩)
+                else G ((a₁ x).1, ⟨2 * ((a₁ x).2 : ℝ) - 1, by { apply double_sub_one_mem_I (le_of_lt _); convert h; norm_num }⟩)
+              := by apply Eq.symm; apply dif_pos; convert this using 1; norm_num
+        _ = if h : ((a₁ x).2 : ℝ) ≤ 1/2
+                then Fₕ.eval (a₁ x).1 ⟨2 * ((a₁ x).2 : ℝ), double_mem_I this⟩
+                else Gₕ.eval (a₁ x).1 ⟨2 * ((a₁ x).2 : ℝ) - 1, by { apply double_sub_one_mem_I (le_of_lt _); convert h; norm_num }⟩
+              := rfl
+        _ = (Fₕ.hcomp Gₕ) (a₁ x)
+              := (Path.Homotopy.hcomp_apply Fₕ Gₕ (a₁ x)).symm
+        _ = Γ (a₁ x)
+              := rfl
+        _ = (a₁.toPath.map Γ.continuous_toFun) x
+              := rfl
+    have hr₂a₂ : r₂.toPath = a₂.toPath.map Γ.continuous_toFun := by
+      ext x
+      have : 2⁻¹ ≤ ((a₂ x).2 : ℝ) := by
+        calc (2⁻¹ : ℝ)
+          _ = ↑(γ T).2   := Subtype.coe_inj.mpr hT_half.symm
+          _ ≤  ↑(a₂ x).2 := (directed_path_bounded a₂.dipath_toPath.2 _).1
+
+      calc r₂.toPath x
+        _ = G ((a₂ x).1, ⟨2 * ((a₂ x).2 : ℝ) - 1, double_sub_one_mem_I this⟩)
+              := rfl
+        _ = if h : ((a₂ x).2 : ℝ) ≤ 1/2
+                then F ((a₂ x).1, ⟨2 * ((a₂ x).2 : ℝ), by { apply double_mem_I; convert h using 1; norm_num }⟩)
+                else G ((a₂ x).1, ⟨2 * ((a₂ x).2 : ℝ) - 1,  by { apply double_sub_one_mem_I (le_of_lt _); convert h using 1; norm_num }⟩)
+              := by
+                split_ifs with h
+                · have : ((a₂ x).2 : ℝ) ≤ 2⁻¹ := by convert h using 1; norm_num
+                  have ha₂x : ((a₂ x).2 : ℝ) = 2⁻¹ := by linarith
+                  have : G (_, 0) = F (_, 1) := Eq.trans (G.source (a₂ x).1) (F.target (a₂ x).1).symm
+                  convert this <;> rw [ha₂x] <;> norm_num
+                · rfl
+        _ = if h : ((a₂ x).2 : ℝ) ≤ 1/2
+                then Fₕ.eval (a₂ x).1 ⟨2 * ((a₂ x).2 : ℝ), by { apply double_mem_I; convert h using 1; norm_num }⟩
+                else Gₕ.eval (a₂ x).1 ⟨2 * ((a₂ x).2 : ℝ) - 1, by { apply double_sub_one_mem_I (le_of_lt _); convert h using 1; norm_num }⟩
+              := rfl
+        _ = (Fₕ.hcomp Gₕ) (a₂ x)
+              := (Path.Homotopy.hcomp_apply Fₕ Gₕ (a₂ x)).symm
+        _ = Γ (a₂ x)
+              := rfl
+        _ = (a₂.toPath.map Γ.continuous_toFun) x
+              := rfl
 
     calc (Γ ∘ γ) t
       _ = Γ (γ t)
             := rfl
       _ = Γ (((a₁.trans a₂).reparam φ φ₀ φ₁) t)
-            := by rw [this]
+            := by rw [←SplitDipath.first_trans_second_reparam_eq_self γ_as_dipath hT₀ hT₁]; rfl
       _ = ((a₁.trans a₂).toPath.map Γ.continuous_toFun).reparam φ φ.continuous_toFun φ₀ φ₁ t
             := rfl
       _ = ((a₁.toPath.trans a₂.toPath).map Γ.continuous_toFun).reparam φ φ.continuous_toFun φ₀ φ₁ t
@@ -524,17 +529,16 @@ def map {p q : Dipath x₀ x₁} (F : Dihomotopy p q) (f : D(X, Y)) :
     unfold DirectedMap.prod_const_fst DirectedMap.prod_map_mk
 
     cases' hx with hx hx
+    case inl => -- x = 0
+      simp [hx]
+      calc (f (F (t ,0)))
+        _ = (f x₀) := by simp
 
-    case inr => sorry
-      -- rw [Set.mem_singleton_iff _] at hx
-      -- simp [hx]
-      -- calc (f (F (t ,1))) = (f x₁) := by simp
-
-    case inl => sorry
-      -- simp [hx]
-      -- calc (f (F (t ,0))) = (f x₀) := by simp
-
-
+    case inr => -- x = 1
+      have : x = 1 := Set.mem_singleton_iff.mp hx
+      simp [this]
+      calc (f (F (t ,1)))
+        _ = (f x₁) := by simp
   directed_toFun := (f.comp F.toDirectedMap).directed_toFun
 
 end Dihomotopy
