@@ -3,7 +3,7 @@ The following files have been ported from Lean 3 to Lean 4:
 - [x] all.lean --> all.lean
 - [ ] auxiliary.lean --> First part: monotone_path.lean, Second part: unit_interval_aux.lean, Third part: fractions.lean, Fourth part (equalities) : TODO
 - [x] constructions.lean
-- [ ] cover_lemma.lean --> Cover of the unit square must be done once some form of fractions has been converted to Lean 4
+- [x] cover_lemma.lean
 - [ ] dihomotopy_cover.lean
 - [x] dihomotopy_flip.lean
 - [x] dihomotopy_to_path_dihomotopy.lean
