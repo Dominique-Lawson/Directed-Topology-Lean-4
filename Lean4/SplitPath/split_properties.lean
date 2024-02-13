@@ -143,7 +143,7 @@ lemma second_part_range_partial_interval (γ : Dipath x₀ x₁) {i d n : ℕ} (
   [(i+d.succ)/(n+1), (i+d.succ+1)/(n+1)] is equal to the image the second part of γ of [(i/(n-d), (i+1)/(n-d)].
 -/
 lemma second_part_range_partial_interval_coe (γ : Dipath x₀ x₁) {i d n : ℕ} (hd : d.succ < n.succ) (hi : i < n - d) :
-  (second_part_dipath γ (Fraction (Nat.succ_pos n) hd)).extend '' Icc (↑i/(↑n-↑d)) ((↑i+1)/(↑n-↑d))
+  (second_part_dipath γ (Fraction (Nat.succ_pos n) (le_of_lt hd))).extend '' Icc (↑i/(↑n-↑d)) ((↑i+1)/(↑n-↑d))
     = γ.extend ''  Icc ((↑(i+d.succ))/(↑n+1)) ((↑(i+d.succ) + 1)/(↑n+1)) := sorry
 
 /-! ### Mixed Parts -/
@@ -213,13 +213,13 @@ variable {x₂ : X}
 If `γ₁` and `γ₂` are two paths, then the first part of `γ₁.trans γ₂` split at `1/2` is `γ₁`
 -/
 lemma first_part_trans (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath x₁ x₂) :
-  (first_part_dipath (γ₁.trans γ₂) unitIAux.half_I) = γ₁.cast rfl (Dipath.trans_eval_at_half γ₁ γ₂) := sorry
+  (first_part_dipath (γ₁.trans γ₂) (Fraction zero_lt_two one_le_two)) = γ₁.cast rfl (Dipath.trans_eval_at_half γ₁ γ₂) := sorry
 
 /--
 If `γ₁` and `γ₂` are two paths, then the second part of `γ₁.trans γ₂` split at `1/2` is `γ₂`
 -/
 lemma second_part_trans (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath x₁ x₂) :
-  (second_part_dipath (γ₁.trans γ₂) unitIAux.half_I) = γ₂.cast (Dipath.trans_eval_at_half γ₁ γ₂) rfl := sorry
+  (second_part_dipath (γ₁.trans γ₂) (Fraction zero_lt_two one_le_two)) = γ₂.cast (Dipath.trans_eval_at_half γ₁ γ₂) rfl := sorry
 
 /--
 If `γ₁` and `γ₂` are two paths, then the first part of `γ₁.trans γ₂` split at `1/(2n + 2)` is the

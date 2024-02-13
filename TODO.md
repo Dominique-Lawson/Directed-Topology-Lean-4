@@ -19,9 +19,9 @@ The following files have been ported from Lean 3 to Lean 4:
 - [x] fundamental_category.lean
 - [x] interpolate.lean
 - [x] morphism_aux.lean
-- [ ] path_cover.lean
+- [x] path_cover.lean
 - [x] pushout_alternative.lean
 - [x] split_dihomotopy.lean
-- [ ] split_path.lean --> In directory SplitPath. Many `split_properties` have not yet been proven (but should also be generalized)
+- [ ] split_path.lean --> In directory SplitPath. Many `split_properties` have not yet been proven (and should also be generalized)
 - [x] stretch_path.lean
 - [x] trans_refl.lean
