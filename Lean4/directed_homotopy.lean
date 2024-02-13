@@ -628,7 +628,7 @@ def DihomotopicWith (P : D(X, Y) → Prop) (f₀ f₁ : D(X, Y)) : Prop := EqvGe
 A `DihomotopyRel f₀ f₁ S` is a dihomotopy between `f₀` and `f₁` which is fixed on the points in `S`.
 -/
 abbrev DihomotopyRel (f₀ f₁ : D(X, Y)) (S : Set X) :=
-  DihomotopyWith f₀ f₁ (fun f => ∀ x ∈ S, f x = f₀ x ∧ f x = f₁ x)
+  DihomotopyWith f₀ f₁ (fun f => ∀ x ∈ S, f x = f₀ x)
 
 namespace DihomotopyRel
 
@@ -636,14 +636,14 @@ section
 
 variable {f₀ f₁ : D(X, Y)} {S : Set X}
 
-lemma eq_fst (F : DihomotopyRel f₀ f₁ S) (t : I) {x : X} (hx : x ∈ S) :
-  F (t, x) = f₀ x := (F.prop t x hx).1
+lemma eq_fst (F : DihomotopyRel f₀ f₁ S) (t : I) {x : X} (hx : x ∈ S) : F (t, x) = f₀ x :=
+  F.prop t x hx
 
-lemma eq_snd (F : DihomotopyRel f₀ f₁ S) (t : I) {x : X} (hx : x ∈ S) :
-  F (t, x) = f₁ x := (F.prop t x hx).2
+lemma eq_snd (F : DihomotopyRel f₀ f₁ S) (t : I) {x : X} (hx : x ∈ S) : F (t, x) = f₁ x := by
+  rw [F.eq_fst t hx, ← F.eq_fst 1 hx, F.apply_one]
 
-lemma fst_eq_snd (F : DihomotopyRel f₀ f₁ S) {x : X} (hx : x ∈ S) :
-  f₀ x = f₁ x := F.eq_fst 0 hx ▸ F.eq_snd 0 hx
+lemma fst_eq_snd (F : DihomotopyRel f₀ f₁ S) {x : X} (hx : x ∈ S) : f₀ x = f₁ x :=
+  F.eq_fst 0 hx ▸ F.eq_snd 0 hx
 
 end
 
@@ -656,7 +656,7 @@ filled in.
 -/
 @[simps!]
 def refl (f : D(X, Y)) (S : Set X) : DihomotopyRel f f S :=
-DihomotopyWith.refl f (fun _ _ => ⟨rfl, rfl⟩)
+DihomotopyWith.refl f (fun _ _ => rfl)
 
 /--
 Given `DihomotopyRel f₀ f₁ S` and `DihomotopyRel f₁ f₂ S`, we can define a `DihomotopyRel f₀ f₂ S`
@@ -668,34 +668,18 @@ def trans (F : DihomotopyRel f₀ f₁ S) (G : DihomotopyRel f₁ f₂ S) : Diho
   prop' := fun t => by
     intros x hx
     simp only [Dihomotopy.trans]
-    change
-      (⟨⟨fun _ => ite ((t : ℝ) ≤ _) _ _, _⟩, _⟩ : D(X, Y)) _ = _ ∧
-      (⟨⟨fun _ => ite ((t : ℝ) ≤ _) _ _, _⟩, _⟩ : D(X, Y)) _ = _
-    split
-    case inl h =>
-      have : ((t : ℝ) ≤ 2⁻¹) := by { simp at h; exact h }
+    change (⟨⟨fun _ => ite ((t : ℝ) ≤ _) _ _, _⟩, _⟩ : D(X, Y)) x = f₀ x
+    split_ifs with h
+    · have : ((t : ℝ) ≤ 2⁻¹) := by { simp at h; exact h }
       set t' : I := ⟨2 * (t : ℝ), double_mem_I this⟩
-
-      have h₁ : F (t', x) = f₀ x := F.eq_fst t' hx
-      have h₂ : F (t', x) = f₂ x := (F.eq_snd t' hx).trans (G.fst_eq_snd hx)
-      have : (F (t', x) = f₀ x) ∧ (F (t', x) = f₂ x) := ⟨h₁, h₂⟩
-      convert this <;> {
-        change ((F.toDihomotopy.dihom_to_hom.extend) (2 * t : ℝ)) x =
-          F.toDihomotopy.dihom_to_hom (⟨2 * (t : ℝ), _⟩, x)
-        rw [←ContinuousMap.Homotopy.extend_apply_coe F.toDihomotopy.dihom_to_hom _ x]
-      }
-    case inr h =>
-      have : (2⁻¹ ≤ (t : ℝ)) := by { simp at h; linarith }
+      convert F.eq_fst t' hx
+      change ((F.toDihomotopy.dihom_to_hom.extend) (2 * t : ℝ)) x = F.toDihomotopy.dihom_to_hom (⟨2 * (t : ℝ), _⟩, x)
+      rw [←ContinuousMap.Homotopy.extend_apply_coe F.toDihomotopy.dihom_to_hom _ x]
+    · have : (2⁻¹ ≤ (t : ℝ)) := by { simp at h; linarith }
       set t' : I := ⟨2 * (t : ℝ) - 1, double_sub_one_mem_I this⟩
-
-      have h₁ : G (t', x) = f₀ x := (G.eq_fst t' hx).trans (F.fst_eq_snd hx).symm
-      have h₂ : G (t', x) = f₂ x := G.eq_snd t' hx
-
-      convert And.intro h₁ h₂ <;> {
-        change ((G.toDihomotopy.dihom_to_hom.extend) (2 * (t : ℝ) - 1)) x =
-          G.toDihomotopy.dihom_to_hom (⟨2 * (t : ℝ) - 1, _⟩, x)
-        rw [←ContinuousMap.Homotopy.extend_apply_coe G.toDihomotopy.dihom_to_hom _ x]
-      }
+      convert (G.eq_fst t' hx).trans (F.fst_eq_snd hx).symm
+      change ((G.toDihomotopy.dihom_to_hom.extend) (2 * (t : ℝ) - 1)) x = G.toDihomotopy.dihom_to_hom (⟨2 * (t : ℝ) - 1, _⟩, x)
+      rw [←ContinuousMap.Homotopy.extend_apply_coe G.toDihomotopy.dihom_to_hom _ x]
 }
 
 lemma trans_apply (F : DihomotopyRel f₀ f₁ S) (G : DihomotopyRel f₁ f₂ S)

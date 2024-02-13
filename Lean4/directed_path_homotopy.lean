@@ -60,13 +60,14 @@ lemma target (F : Dihomotopy p₀ p₁) (t : I) : F (t, 1) = x₁ := by
 /-- A `F : Dihomotopy ↑p₁ ↑p₂` between two dipaths `p₁ p₂ : Dipath x₁ x₂` can be coerced into a dihomotopy,
   if it is directed -/
 def hom_to_dihom (F : Path.Homotopy p₀.toPath p₁.toPath)
-  (HF : DirectedMap.Directed F.toContinuousMap) : Dihomotopy p₀ p₁ where
+    (HF : DirectedMap.Directed F.toContinuousMap) : Dihomotopy p₀ p₁ where
   toFun := F.toFun
   continuous_toFun := F.continuous_toFun
   directed_toFun := HF
   map_zero_left := F.map_zero_left
   map_one_left := F.map_one_left
-  prop' := sorry -- F.prop'
+  prop' := F.prop'
+
 
 /-- A Dihomotopy `F` between two Dipaths `p₁ p₂` can be coerced into a Homotopy between `p₀.toPath`
  and `p₁.toPath`-/
@@ -75,7 +76,7 @@ def dihom_to_hom (F : Dihomotopy p₀ p₁) : Path.Homotopy p₀.toPath p₁.toP
   continuous_toFun := F.continuous_toFun
   map_zero_left := F.map_zero_left
   map_one_left := F.map_one_left
-  prop' := sorry -- F.prop'
+  prop' := F.prop'
 
 instance coe_dihom_to_hom : Coe (Dihomotopy p₀ p₁) (Path.Homotopy p₀.toPath p₁.toPath) :=
   ⟨fun F => F.dihom_to_hom⟩
@@ -418,19 +419,13 @@ def reparam (p : Dipath x₀ x₁) (f : D(I, I)) (g : D(I, I)) (hf_le_g : ∀ (t
     cases' hx with hx hx
     · have : g 0 = f 0 := hg₀.trans (hf₀.symm)
       rw [hx]
-      constructor
       calc (p ((interpolate f g) (t, 0)))
         _ = p (f 0) := by rw [interpolate_constant_apply f g 0 (f 0) rfl this t]
-      calc (p ((interpolate f g) (t, 0)))
-        _ = p (g 0) := by rw [interpolate_constant_apply f g 0 (g 0) this.symm rfl t]
     · have : g 1 = f 1 := hg₁.trans (hf₁.symm)
       rw [Set.mem_singleton_iff] at hx
       rw [hx]
-      constructor
       calc (p ((interpolate f g) (t, 1)))
         _ = p (f 1) := by rw [interpolate_constant_apply f g 1 (f 1) rfl this t]
-      calc (p ((interpolate f g) (t, 1)))
-        _ = p (g 1) := by rw [interpolate_constant_apply f g 1 (g 1) this.symm rfl t]
   directed_toFun := fun t₀ t₁ γ γ_dipath =>
     (p.toDirectedMap).directed_toFun (γ.map _) (directed_interpolate f g hf_le_g γ γ_dipath)
 
