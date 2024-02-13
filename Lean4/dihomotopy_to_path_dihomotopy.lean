@@ -147,28 +147,24 @@ def dihom_to_path_dihom (F : Dihomotopy f g) : Dipath.Dihomotopy
     cases hx
     case inl hx => -- x = 0
       subst hx
-      constructor <;> {
-        show (Dihomotopy.hcomp' _ _ _) (t, 0) = _
-        rw [Dihomotopy.hcomp'_apply_zero_right]
-        rw [Dihomotopy.hcomp'_apply_zero_right]
-        simp
-        show F (min t 0, 0) = f 0
-        rw [min_eq_right]
-        simp
-        exact t.2.1
-      }
+      show (Dihomotopy.hcomp' _ _ _) (t, 0) = _
+      rw [Dihomotopy.hcomp'_apply_zero_right]
+      rw [Dihomotopy.hcomp'_apply_zero_right]
+      simp
+      show F (min t 0, 0) = f 0
+      rw [min_eq_right]
+      simp
+      exact t.2.1
     case inr hx =>
       rw [Set.mem_singleton_iff] at hx
       subst hx
-      constructor <;> {
-        show (Dihomotopy.hcomp' _ _ _) (t, 1) = _
-        rw [Dihomotopy.hcomp'_apply_one_right]
-        simp
-        show F (max t 1, 1) = g 1
-        rw [max_eq_right]
-        simp
-        exact t.2.2
-      }
+      show (Dihomotopy.hcomp' _ _ _) (t, 1) = _
+      rw [Dihomotopy.hcomp'_apply_one_right]
+      simp
+      show F (max t 1, 1) = g 1
+      rw [max_eq_right]
+      simp
+      exact t.2.2
 
 
 lemma dihom_to_path_dihom_range (F : Dihomotopy f g) :
