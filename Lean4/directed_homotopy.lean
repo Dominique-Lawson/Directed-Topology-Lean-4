@@ -412,18 +412,24 @@ def trans {f₂ : D(X, Y)} (F : Dihomotopy f₀ f₁) (G: Dihomotopy f₁ f₂) 
             _ ≤ ↑(a₂ x).1 := (directed_path_bounded a₂.dipath_toPath.1 _).1
 
       calc r₂.toPath x
-          _ = G (⟨2 * ((a₂ x).1 : ℝ) - 1, double_sub_one_mem_I this⟩, (a₂ x).2) := rfl
-          _ = if h : ((a₂ x).1 : ℝ) ≤ 1/2
-              then F (⟨2 * ((a₂ x).1 : ℝ), by { simp at h; exact double_mem_I h }⟩, (a₂ x).2)
-              else G (⟨2 * ((a₂ x).1 : ℝ) - 1,  by { simp at h; exact double_sub_one_mem_I (le_of_lt h) }⟩, (a₂ x).2)
-                := by sorry
-          _ = if h : ((a₂ x).1 : ℝ) ≤ 1/2
-              then Fₕ (⟨2 * ((a₂ x).1 : ℝ), by { simp at h; exact double_mem_I h }⟩, (a₂ x).2)
-              else Gₕ (⟨2 * ((a₂ x).1 : ℝ) - 1, by { simp at h; exact double_sub_one_mem_I (le_of_lt h) }⟩, (a₂ x).2)
-                := rfl
-          _ = (Fₕ.trans Gₕ) (a₂ x) := (ContinuousMap.Homotopy.trans_apply Fₕ Gₕ (a₂ x)).symm
-          _ = Γ (a₂ x) := rfl
-          _ = (a₂.toPath.map Γ.continuous_toFun) x := rfl
+        _ = G (⟨2 * ((a₂ x).1 : ℝ) - 1, double_sub_one_mem_I this⟩, (a₂ x).2) := rfl
+        _ = if h : ((a₂ x).1 : ℝ) ≤ 1/2
+                then F (⟨2 * ((a₂ x).1 : ℝ), by { simp at h; exact double_mem_I h }⟩, (a₂ x).2)
+                else G (⟨2 * ((a₂ x).1 : ℝ) - 1,  by { simp at h; exact double_sub_one_mem_I (le_of_lt h) }⟩, (a₂ x).2)
+              := by
+                split_ifs with h
+                · have : ((a₂ x).1 : ℝ) ≤ 2⁻¹ := by convert h using 1; norm_num
+                  have ha₂x : ((a₂ x).1 : ℝ) = 2⁻¹ := by linarith
+                  have : G (0, _) = F (1, _) := Eq.trans (G.map_zero_left (a₂ x).2) (F.map_one_left (a₂ x).2).symm
+                  convert this <;> rw [ha₂x] <;> norm_num
+                · rfl
+        _ = if h : ((a₂ x).1 : ℝ) ≤ 1/2
+                then Fₕ (⟨2 * ((a₂ x).1 : ℝ), by { simp at h; exact double_mem_I h }⟩, (a₂ x).2)
+                else Gₕ (⟨2 * ((a₂ x).1 : ℝ) - 1, by { simp at h; exact double_sub_one_mem_I (le_of_lt h) }⟩, (a₂ x).2)
+              := rfl
+        _ = (Fₕ.trans Gₕ) (a₂ x) := (ContinuousMap.Homotopy.trans_apply Fₕ Gₕ (a₂ x)).symm
+        _ = Γ (a₂ x) := rfl
+        _ = (a₂.toPath.map Γ.continuous_toFun) x := rfl
 
     calc (Γ ∘ γ) t
         _ = Γ (γ t) := rfl
