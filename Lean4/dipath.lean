@@ -1,4 +1,5 @@
 import Lean4.directed_unit_interval
+import Lean4.unit_interval_aux
 
 /-
   This file contains the definition of a dipath in a directed space:
@@ -186,13 +187,10 @@ Path.trans_apply (γ.toPath) (γ'.toPath) t
 lemma trans_range (γ : Dipath x y) (γ' : Dipath y z) : range (γ.trans γ') = range γ ∪ range γ' :=
   Path.trans_range γ.toPath γ'.toPath
 
--- TODO: First add (rewritten) fractions
--- lemma trans_eval_at_half (γ : Dipath x y) (γ' : Dipath y z) :
---   (γ.trans γ') (auxiliary.inv_I two_pos) = y :=
--- begin
---   rw dipath.trans_apply,
---   simp,
--- end
+lemma trans_eval_at_half (γ : Dipath x y) (γ' : Dipath y z) :
+    (γ.trans γ') unitIAux.half_I = y := by
+  rw [Dipath.trans_apply]
+  simp
 
 /-! ### Mapping dipaths -/
 

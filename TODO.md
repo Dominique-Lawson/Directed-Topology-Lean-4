@@ -22,6 +22,6 @@ The following files have been ported from Lean 3 to Lean 4:
 - [ ] path_cover.lean
 - [x] pushout_alternative.lean
 - [x] split_dihomotopy.lean
-- [ ] split_path.lean --> In directory SplitPath. Only section `split_properties` hasn't been converted
+- [ ] split_path.lean --> In directory SplitPath. Many `split_properties` have not yet been proven (but should also be generalized)
 - [x] stretch_path.lean
 - [x] trans_refl.lean

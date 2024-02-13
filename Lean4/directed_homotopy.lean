@@ -171,26 +171,16 @@ variable {t₀ t₁ : I} (γ : Dipath t₀ t₁) {T : I}
 variable (hT : γ T = half_I)
 
 def FirstPartStretch (ht₀ : (t₀ : ℝ) ≤ 2⁻¹) : Dipath (⟨2 * (t₀.1 : ℝ), double_mem_I ht₀⟩ : I) (1 : I) where
-  toFun := Dipath.stretch_up (first_part_dipath γ T) (by { convert le_refl (2⁻¹ : ℝ); simp [hT]; rfl })
+  toFun := Dipath.stretch_up (first_part_dipath γ T) (by { convert le_refl (2⁻¹ : ℝ); simp [hT] })
   source' := by simp
-  target' := by {
-    simp [hT]
-    apply Subtype.coe_inj.mp
-    show 2 * (2⁻¹ : ℝ) = 1
-    norm_num
-  }
-  dipath_toPath := Dipath.isDipath_stretch_up (_) (by { convert le_refl (2⁻¹ : ℝ); simp [hT]; rfl })
+  target' := by simp [hT]
+  dipath_toPath := Dipath.isDipath_stretch_up (_) (by { convert le_refl (2⁻¹ : ℝ); simp [hT] })
 
 def SecondPartStretch (ht₁ : 2⁻¹ ≤ (t₁ : ℝ)) : Dipath (0 : I) ⟨2 * (t₁.1 : ℝ) - 1, double_sub_one_mem_I ht₁⟩ where
-  toFun := Dipath.stretch_down (second_part_dipath γ T) (by { convert le_refl (2⁻¹ : ℝ); simp [hT]; rfl })
-  source' := by {
-    simp [hT]
-    apply Subtype.coe_inj.mp
-    show 2 * (2⁻¹ : ℝ) - 1 = 0
-    norm_num
-  }
+  toFun := Dipath.stretch_down (second_part_dipath γ T) (by { convert le_refl (2⁻¹ : ℝ); simp [hT] })
+  source' := by simp [hT]
   target' := by simp
-  dipath_toPath := Dipath.isDipath_stretch_down (_) (by { convert le_refl (2⁻¹ : ℝ); simp [hT]; rfl })
+  dipath_toPath := Dipath.isDipath_stretch_down (_) (by { convert le_refl (2⁻¹ : ℝ); simp [hT] })
 
 
 end trans_aux₁

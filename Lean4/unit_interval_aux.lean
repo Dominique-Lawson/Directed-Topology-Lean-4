@@ -42,7 +42,7 @@ noncomputable section
 lemma half_mem_I : (2⁻¹ : ℝ) ∈ I :=
 ⟨inv_nonneg.mpr zero_le_two, inv_le_one one_le_two⟩
 
-def half_I : I := ⟨(2⁻¹ : ℝ), half_mem_I⟩
+abbrev half_I : I := ⟨(2⁻¹ : ℝ), half_mem_I⟩
 
 lemma has_T_half {t₀ t₁ : I} (γ : Path t₀ t₁) (ht₀ : ↑t₀ < (2⁻¹ : ℝ)) (ht₁ : ↑t₁ > (2⁻¹ : ℝ)) :
   ∃ (T : I),  0 < T ∧ T < 1 ∧ (γ T) = half_I := by
