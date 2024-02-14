@@ -124,7 +124,7 @@ lemma covered_partwise_cast_iff  (hX : X₀ ∪ X₁ = univ) {n : ℕ} :
   case succ n ih =>
     intros x₀ x₁ x₀' x₁' γ hx₀ hx₁
     unfold covered_partwise
-    rw [SplitProperties.first_part_cast, SplitProperties.second_part_cast]
+    rw [SplitProperties.firstPart_cast, SplitProperties.secondPart_cast]
     constructor
     · rintro ⟨hγ₁, hγ₂⟩
       constructor
@@ -155,7 +155,7 @@ lemma covered_partwise_of_covered_by_intervals {hX : X₀ ∪ X₁ = Set.univ} (
     intros x₀ x₁ γ hγ
     constructor
     · unfold covered
-      rw [SplitProperties.first_part_range_interval γ _, ←Dipath.image_extend_eq_image]
+      rw [SplitProperties.firstPart_range_interval γ _, ←Dipath.image_extend_eq_image]
       convert hγ 0 (by norm_num) <;> norm_num
     · apply ih
       intros i hi
@@ -166,7 +166,7 @@ lemma covered_partwise_of_covered_by_intervals {hX : X₀ ∪ X₁ = Set.univ} (
         (SplitDipath.SecondPartDipath γ _).extend '' Set.Icc (↑i/(↑(n+1))) ((↑i+1)/(↑(n+1))) ⊆ X₁
       · convert this <;> exact (Nat.cast_succ n).symm
 
-      rw [SplitProperties.second_part_range_interval_coe γ _ _]
+      rw [SplitProperties.secondPart_range_interval_coe γ _ _]
       convert h <;> exact (Nat.cast_succ i).symm
       · exact hi
       · exact Nat.succ_pos n
@@ -194,7 +194,7 @@ lemma covered_by_intervals_of_covered_partwise {hX : X₀ ∪ X₁ = Set.univ} (
     by_cases h_i_eq_0 : i = 0
     · have hγ_first_cov := hγ.left
       rw [h_i_eq_0]
-      have := SplitProperties.first_part_range_interval_coe γ (show 0 < n+2 by linarith)
+      have := SplitProperties.firstPart_range_interval_coe γ (show 0 < n+2 by linarith)
       unfold covered at hγ_first_cov
       rw [this] at hγ_first_cov
       convert hγ_first_cov <;> simp
@@ -205,7 +205,7 @@ lemma covered_by_intervals_of_covered_partwise {hX : X₀ ∪ X₁ = Set.univ} (
       · convert this <;> rw [Nat.cast_sub (Nat.pos_of_ne_zero h_i_eq_0)] <;> simp
 
       have : i - 1 < n.succ := Nat.lt_of_succ_lt_succ ((Nat.succ_pred_eq_of_pos (Nat.pos_of_ne_zero h_i_eq_0)).symm ▸ hi)
-      rw [←SplitProperties.second_part_range_interval_coe γ (this) (by linarith)]
+      rw [←SplitProperties.secondPart_range_interval_coe γ (this) (by linarith)]
       convert ih hγ.right (i-1) (this) <;> exact (Nat.cast_succ n)
 
 /--
@@ -219,7 +219,7 @@ lemma covered_partwise_first_part_d (hX : X₀ ∪ X₁ = Set.univ) {n d : ℕ} 
   intro x y γ hγ
   apply covered_partwise_of_covered_by_intervals
   intro i hi
-  rw [SplitProperties.first_part_range_interval_partial_coe γ hd_n hi]
+  rw [SplitProperties.firstPart_range_interval_partial_coe γ hd_n hi]
   exact covered_by_intervals_of_covered_partwise n hγ i (lt_trans hi hd_n)
 
 /--
@@ -244,7 +244,7 @@ lemma covered_partwise_second_part_d (hX : X₀ ∪ X₁ = Set.univ) {n d : ℕ}
     apply Nat.succ_lt_succ
     exact lt_tsub_iff_right.mp hi_lt_n_sub_d
   have := covered_by_intervals_of_covered_partwise n hγ (i + d.succ) this
-  rw [←SplitProperties.second_part_range_partial_interval_coe γ hd_n hi_lt_n_sub_d] at this
+  rw [←SplitProperties.secondPart_range_partial_interval_coe γ hd_n hi_lt_n_sub_d] at this
   have h : (n-d.succ).succ = n - d := by
     rw [Nat.sub_succ]
     exact Nat.succ_pred_eq_of_pos (Nat.sub_pos_of_lt (Nat.lt_of_succ_lt_succ hd_n))
@@ -310,7 +310,7 @@ lemma covered_partwise_of_parts (hX : X₀ ∪ X₁ = Set.univ) {n : ℕ} (hn : 
     have h₂ : i < d'.succ := by
       rw [d_def, ←Nat.pred_eq_sub_one k, Nat.succ_pred_eq_of_pos hk]
       exact h
-    rw [←SplitProperties.first_part_range_interval_partial_coe γ h₁ h₂]
+    rw [←SplitProperties.firstPart_range_interval_partial_coe γ h₁ h₂]
     convert (covered_by_intervals_of_covered_partwise (k-1) hγ_first i (by linarith))
   · push_neg at h
     set i' := i - d'.succ with i_def
@@ -330,7 +330,7 @@ lemma covered_partwise_of_parts (hX : X₀ ∪ X₁ = Set.univ) {n : ℕ} (hn : 
       rw [←add_mul, ←Nat.succ_pred_eq_of_pos prod_pos]
       convert hi using 1
 
-    rw [←SplitProperties.second_part_range_partial_interval_coe γ h₁ h₂]
+    rw [←SplitProperties.secondPart_range_partial_interval_coe γ h₁ h₂]
     convert (covered_by_intervals_of_covered_partwise (n * k - 1) hγ_second (i - k) this)
 
 /--
@@ -366,8 +366,8 @@ lemma covered_partwise_trans  {hX : X₀ ∪ X₁ = Set.univ} {n : ℕ} {x₀ x�
     linarith
 
   by_cases h : i < n.succ
-  · rw [←SplitProperties.first_part_range_interval_partial_coe (γ₁.trans γ₂) h_lt h]
-    rw [SplitProperties.first_part_eq_of_split_point_eq (γ₁.trans γ₂) h₁]
+  · rw [←SplitProperties.firstPart_range_interval_partial_coe (γ₁.trans γ₂) h_lt h]
+    rw [SplitProperties.firstPart_eq_of_split_point_eq (γ₁.trans γ₂) h₁]
     rw [SplitProperties.first_part_trans γ₁ γ₂]
     rw [Dipath.cast_image, Dipath.cast_image]
     exact covered_by_intervals_of_covered_partwise n hγ₁ i h
@@ -381,8 +381,8 @@ lemma covered_partwise_trans  {hX : X₀ ∪ X₁ = Set.univ} {n : ℕ} {x₀ x�
     have : i < n.succ + n.succ := by linarith
     have hk : k < n.succ := k_def ▸ (tsub_lt_iff_left h).mpr this
     have hk' : k < (n + n).succ - n := hn.symm ▸ hk
-    rw [←SplitProperties.second_part_range_partial_interval_coe (γ₁.trans γ₂) h_lt hk']
-    rw [SplitProperties.second_part_eq_of_split_point_eq (γ₁.trans γ₂) h₁]
+    rw [←SplitProperties.secondPart_range_partial_interval_coe (γ₁.trans γ₂) h_lt hk']
+    rw [SplitProperties.secondPart_eq_of_split_point_eq (γ₁.trans γ₂) h₁]
     rw [SplitProperties.second_part_trans γ₁ γ₂]
     rw [Dipath.cast_image, Dipath.cast_image, hn']
     exact covered_by_intervals_of_covered_partwise n hγ₂ k hk
