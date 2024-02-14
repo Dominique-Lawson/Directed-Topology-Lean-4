@@ -83,7 +83,7 @@ Suppose the following are given:
 * `F : dihomotopy p₀.toDirectedMap q₀.toDirectedMap`
 * `G : dihomotopy p₁.toDirectedMap p₁.toDirectedMap`
 * `h : F.eval_at_right 1 = G.eval_at_right 0`
-Then we can compose these horizontaly to obtain:
+Then we can compose these horizontally to obtain:
   `dihomotopy (p₀.trans p₁).toDirectedMap (q₀.trans q₁).toDirectedMap`
 -/
 def hcomp' (F : Dihomotopy p₀.toDirectedMap q₀.toDirectedMap) (G : Dihomotopy p₁.toDirectedMap q₁.toDirectedMap)

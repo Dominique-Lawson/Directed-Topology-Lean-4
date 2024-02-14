@@ -4,7 +4,7 @@ The following files have been ported from Lean 3 to Lean 4:
 - [ ] auxiliary.lean --> First part: monotone_path.lean, Second part: unit_interval_aux.lean, Third part: fractions.lean, Fourth part (equalities) : TODO
 - [x] constructions.lean
 - [x] cover_lemma.lean
-- [ ] dihomotopy_cover.lean
+- [x] dihomotopy_cover.lean
 - [x] dihomotopy_flip.lean
 - [x] dihomotopy_to_path_dihomotopy.lean
 - [x] dipath.lean

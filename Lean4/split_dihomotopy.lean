@@ -68,7 +68,7 @@ lemma directedSnd_apply (T t : I) : DirectedSnd T t = ⟨_, interp_left_mem_I T 
   ring
 
 /- Splitting a dipath-dihomotopy vertically -/
-def FirstPartVerticalyDihomotopy {x y : X} {γ₁ γ₂ : Dipath x y} (F : Dipath.Dihomotopy γ₁ γ₂) (T : I) :
+def FirstPartVerticallyDihomotopy {x y : X} {γ₁ γ₂ : Dipath x y} (F : Dipath.Dihomotopy γ₁ γ₂) (T : I) :
     Dipath.Dihomotopy γ₁ (F.eval T) where
   toDirectedMap := F.toDirectedMap.comp (DirectedMap.prod_map_mk' (DirectedFst T) (DirectedMap.id I))
   map_zero_left := fun x => by show F (DirectedFst T 0, x) = γ₁ x; simp
@@ -76,13 +76,13 @@ def FirstPartVerticalyDihomotopy {x y : X} {γ₁ γ₂ : Dipath x y} (F : Dipat
   prop' := fun t z hz => F.prop' _ z hz
 
 lemma fpv_apply {x y : X} {γ₁ γ₂ : Dipath x y} (F : Dipath.Dihomotopy γ₁ γ₂) (T s t : I) :
-    FirstPartVerticalyDihomotopy F T (s, t) = F (T * s, t) := by
+    FirstPartVerticallyDihomotopy F T (s, t) = F (T * s, t) := by
   show F (DirectedFst T s, t) = F (T * s, t)
   rw [directedFst_apply]
   rfl
 
 /- Splitting a dipath-dihomotopy vertically -/
-def SecondPartVerticalyDihomotopy {x y : X} {γ₁ γ₂ : Dipath x y} (F : Dipath.Dihomotopy γ₁ γ₂) (T : I) :
+def SecondPartVerticallyDihomotopy {x y : X} {γ₁ γ₂ : Dipath x y} (F : Dipath.Dihomotopy γ₁ γ₂) (T : I) :
     Dipath.Dihomotopy (F.eval T) γ₂ where
   toDirectedMap := F.toDirectedMap.comp (DirectedMap.prod_map_mk' (DirectedSnd T) (DirectedMap.id I))
 
@@ -95,7 +95,7 @@ def SecondPartVerticalyDihomotopy {x y : X} {γ₁ γ₂ : Dipath x y} (F : Dipa
       exact (F.prop' _ z hz)
 
 lemma spv_apply {x y : X} {γ₁ γ₂ : Dipath x y} (F : Dipath.Dihomotopy γ₁ γ₂) (T s t : I) :
-    SecondPartVerticalyDihomotopy F T (s, t) = F (⟨_, interp_left_mem_I T s⟩, t) := by
+    SecondPartVerticallyDihomotopy F T (s, t) = F (⟨_, interp_left_mem_I T s⟩, t) := by
   show F (DirectedSnd T s, t) = F (_, t)
   rw [directedSnd_apply]
 
