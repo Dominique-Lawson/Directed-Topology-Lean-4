@@ -101,15 +101,15 @@ lemma spv_apply {x y : X} {γ₁ γ₂ : Dipath x y} (F : Dipath.Dihomotopy γ�
 
 /- Splitting a dihomotopy horizontally -/
 def FirstPartHorizontallyDihomotopy {f g : D(I, X)} (F : Dihomotopy f g) (T : I) :
-    Dihomotopy (SplitDipath.first_part_dipath (Dipath.of_directedMap f) T).toDirectedMap
-               (SplitDipath.first_part_dipath (Dipath.of_directedMap g) T).toDirectedMap where
+    Dihomotopy (SplitDipath.FirstPartDipath (Dipath.of_directedMap f) T).toDirectedMap
+               (SplitDipath.FirstPartDipath (Dipath.of_directedMap g) T).toDirectedMap where
   toDirectedMap := F.toDirectedMap.comp (DirectedMap.prod_map_mk' (DirectedMap.id I) (DirectedFst T))
   map_zero_left := fun x => by
-    show F (0, DirectedFst T x) = SplitDipath.first_part_dipath (Dipath.of_directedMap f) T x
+    show F (0, DirectedFst T x) = SplitDipath.FirstPartDipath (Dipath.of_directedMap f) T x
     simp
     rfl
   map_one_left := fun x => by
-    show F (1, DirectedFst T x) = SplitDipath.first_part_dipath (Dipath.of_directedMap g) T x
+    show F (1, DirectedFst T x) = SplitDipath.FirstPartDipath (Dipath.of_directedMap g) T x
     simp
     rfl
 
@@ -122,15 +122,15 @@ lemma fph_apply {f g : D(I, X)} (F : Dihomotopy f g) (T s t : I) :
 
 /- Splitting a dihomotopy horizontally -/
 def SecondPartHorizontallyDihomotopy {f g : D(I, X)} (F : Dihomotopy f g) (T : I) :
-    Dihomotopy (SplitDipath.second_part_dipath (Dipath.of_directedMap f) T).toDirectedMap
-               (SplitDipath.second_part_dipath (Dipath.of_directedMap g) T).toDirectedMap where
+    Dihomotopy (SplitDipath.SecondPartDipath (Dipath.of_directedMap f) T).toDirectedMap
+               (SplitDipath.SecondPartDipath (Dipath.of_directedMap g) T).toDirectedMap where
   toDirectedMap := F.toDirectedMap.comp (DirectedMap.prod_map_mk' (DirectedMap.id I) (DirectedSnd T))
   map_zero_left := fun x => by
-    show F (0, DirectedSnd T x) = SplitDipath.second_part_dipath (Dipath.of_directedMap f) T x
+    show F (0, DirectedSnd T x) = SplitDipath.SecondPartDipath (Dipath.of_directedMap f) T x
     simp
     rfl
   map_one_left := fun x => by
-    show F (1, DirectedSnd T x) = SplitDipath.second_part_dipath (Dipath.of_directedMap g) T x
+    show F (1, DirectedSnd T x) = SplitDipath.SecondPartDipath (Dipath.of_directedMap g) T x
     simp
     rfl
 
