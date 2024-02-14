@@ -20,6 +20,7 @@ import Lean4.monotone_path
 import Lean4.morphism_aux
 import Lean4.pushout_alternative
 import Lean4.path_cover
+import Lean4.split_dihomotopy
 import Lean4.stretch_path
 import Lean4.trans_refl
 import Lean4.unit_interval_aux

@@ -73,14 +73,7 @@ def FirstPartVerticalyDihomotopy {x y : X} {γ₁ γ₂ : Dipath x y} (F : Dipat
   toDirectedMap := F.toDirectedMap.comp (DirectedMap.prod_map_mk' (DirectedFst T) (DirectedMap.id I))
   map_zero_left := fun x => by show F (DirectedFst T 0, x) = γ₁ x; simp
   map_one_left := fun x => by show F (DirectedFst T 1, x) = F (T, x); simp
-  prop' := fun t z hz => by
-    constructor
-    · show F (DirectedFst T t, z) = γ₁ z
-      exact (F.prop' _ z hz).1
-    · show F (DirectedFst T t, z) = F (T, z)
-      have : F (T, z) = _ := (F.prop' T z hz).2
-      rw [this]
-      exact (F.prop' _ z hz).2
+  prop' := fun t z hz => F.prop' _ z hz
 
 lemma fpv_apply {x y : X} {γ₁ γ₂ : Dipath x y} (F : Dipath.Dihomotopy γ₁ γ₂) (T s t : I) :
     FirstPartVerticalyDihomotopy F T (s, t) = F (T * s, t) := by
@@ -96,13 +89,10 @@ def SecondPartVerticalyDihomotopy {x y : X} {γ₁ γ₂ : Dipath x y} (F : Dipa
   map_zero_left := fun x => by show F (DirectedSnd T 0, x) = F (T, x); simp
   map_one_left := fun x => by show F (DirectedSnd T 1, x) = γ₂ x; simp
   prop' := fun t z hz => by
-    constructor
-    · show F (DirectedSnd T t, z) = F (T, z)
-      have : F (T, z) = _ := (F.prop' T z hz).2
+      show F (DirectedSnd T t, z) = F (T, z)
+      have : F (T, z) = _ := (F.prop' T z hz)
       rw [this]
-      exact (F.prop' _ z hz).2
-    · show F (DirectedSnd T t, z) = γ₂ z
-      exact (F.prop' _ z hz).2
+      exact (F.prop' _ z hz)
 
 lemma spv_apply {x y : X} {γ₁ γ₂ : Dipath x y} (F : Dipath.Dihomotopy γ₁ γ₂) (T s t : I) :
     SecondPartVerticalyDihomotopy F T (s, t) = F (⟨_, interp_left_mem_I T s⟩, t) := by
