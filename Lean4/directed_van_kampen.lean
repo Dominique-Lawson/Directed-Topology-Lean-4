@@ -115,13 +115,13 @@ local notation "F_obj" => FunctorOnObj hX F₁ F₂
 
 variable {F₁ F₂}
 
-lemma functor_obj_apply_one {x : X} (hx : x ∈ X₁) : F₁.obj ⟨x, hx⟩ = F_obj ⟨x⟩ := by
+lemma functorOnObj_apply_one {x : X} (hx : x ∈ X₁) : F₁.obj ⟨x, hx⟩ = F_obj ⟨x⟩ := by
   -- TODO: This is unnecessary, but forces Lean to add the condition h_comm to functor_obj_apply_one. This keeps the symmetry
   have := h_comm
   convert (dif_pos hx).symm using 1
   rfl
 
-lemma functor_obj_apply_two {x : X} (hx₂ : x ∈ X₂) : F₂.obj ⟨x, hx₂⟩ = F_obj ⟨x⟩ := by
+lemma functorOnObj_apply_two {x : X} (hx₂ : x ∈ X₂) : F₂.obj ⟨x, hx₂⟩ = F_obj ⟨x⟩ := by
   by_cases hx₁ : x ∈ X₁
   case pos =>
     have hx₀ : x ∈ X₁ ∩ X₂ := ⟨hx₁, hx₂⟩
@@ -146,15 +146,15 @@ lemma functor_obj_apply_two {x : X} (hx₂ : x ∈ X₂) : F₂.obj ⟨x, hx₂�
 -/
 def FunctorOnHomOfCoveredAux₁ {γ : Dipath x y} (hγ : range γ ⊆ X₁) :
     F_obj ⟨x⟩ ⟶ F_obj ⟨y⟩ :=
-  (eqToHom (functor_obj_apply_one hX h_comm (source_elt_of_image_subset hγ)).symm) ≫
+  (eqToHom (functorOnObj_apply_one hX h_comm (source_elt_of_image_subset hγ)).symm) ≫
   (F₁.map ⟦SubtypeDipath γ hγ⟧) ≫
-  (eqToHom (functor_obj_apply_one hX h_comm (target_elt_of_image_subset hγ)))
+  (eqToHom (functorOnObj_apply_one hX h_comm (target_elt_of_image_subset hγ)))
 
 def FunctorOnHomOfCoveredAux₂ {γ : Dipath x y} (hγ : range γ ⊆ X₂) :
     F_obj ⟨x⟩ ⟶ F_obj ⟨y⟩ :=
-  (eqToHom (functor_obj_apply_two hX h_comm (source_elt_of_image_subset hγ)).symm) ≫
+  (eqToHom (functorOnObj_apply_two hX h_comm (source_elt_of_image_subset hγ)).symm) ≫
   (F₂.map ⟦SubtypeDipath γ hγ⟧) ≫
-  (eqToHom (functor_obj_apply_two hX h_comm (target_elt_of_image_subset hγ)))
+  (eqToHom (functorOnObj_apply_two hX h_comm (target_elt_of_image_subset hγ)))
 
 /-
   Show that these maps respect composition of paths
@@ -347,7 +347,246 @@ lemma functorOnHomOfCovered_dihomotopic {x y : X} {γ γ' : Dipath x y} {F : Dih
 
 end FunctorOnHomOfCoveredProperties
 
+/-
+-  ### Define the behaviour on partwise covered paths
+-/
+
+-- TODO: This definition now has (x y γ) instead of {x y γ} forcing an auxiliary function.
+def FunctorOnHomOfCoveredPartwiseAux {n : ℕ} :
+    ∀ (x y : X) (γ : Dipath x y) (_ : covered_partwise hX γ n), F_obj ⟨x⟩ ⟶ F_obj ⟨y⟩ :=
+  Nat.recOn n
+    (fun _ _ _ hγ => F₀ hγ)
+    (fun _ ih _ _ _ hγ => (F₀ hγ.1) ≫ (ih _ _ _ hγ.2))
+
+abbrev FunctorOnHomOfCoveredPartwise {n : ℕ} {x y : X} {γ : Dipath x y} (hγ : covered_partwise hX γ n) :=
+  FunctorOnHomOfCoveredPartwiseAux hX h_comm x y γ hγ
+
+local notation "Fₙ" => FunctorOnHomOfCoveredPartwise hX h_comm
+
+lemma functorOnHomOfCoveredPartwise_apply_0 {x y : X} {γ : Dipath x y} (hγ : covered_partwise hX γ 0) :
+    Fₙ hγ = F₀ hγ := rfl
+
+lemma functorOnHomOfCoveredPartwise_apply_succ {n : ℕ} {x y : X} {γ : Dipath x y} (hγ : covered_partwise hX γ n.succ) :
+    Fₙ hγ = (F₀ hγ.left) ≫ (Fₙ hγ.right) := rfl
+
+lemma functorOnHomOfCoveredPartwise_equal {n : ℕ} {γ₁ γ₂ : Dipath x y} (h : γ₁ = γ₂)
+  (hγ₁ : covered_partwise hX γ₁ n) (hγ₂ : covered_partwise hX γ₂ n) :
+    Fₙ hγ₁ = Fₙ hγ₂ := by subst_vars; rfl
+
+lemma functorOnHomOfCoveredPartwise_equal' {n m : ℕ} {γ₁ γ₂ : Dipath x y} (h₁ : γ₁ = γ₂)
+  (h₂ : n = m) (hγ₁ : covered_partwise hX γ₁ n) (hγ₂ : covered_partwise hX γ₂ m) :
+    Fₙ hγ₁ = Fₙ hγ₂ := by subst_vars; rfl
+
+lemma functorOnHomOfCoveredPartwise_cast_params {n m : ℕ} {γ₁ γ₂ : Dipath x y} (h₁ : γ₁ = γ₂)
+  (h₂ : n = m) (hγ₁ : covered_partwise hX γ₁ n) :
+    Fₙ hγ₁ = Fₙ (covered_partwise_of_equal hX h₁ h₂ hγ₁) := by subst_vars; rfl
+
+lemma functorOnHomOfCoveredPartwise_cast {x y x' y' : X} {n : ℕ} {γ : Dipath x y}
+  (hγ : covered_partwise hX γ n) (hx : x' = x) (hy : y' = y) :
+    Fₙ ((covered_partwise_cast_iff hX γ hx hy).mp hγ) =
+      (eqToHom (by rw [hx])) ≫ (Fₙ hγ) ≫ (eqToHom (by rw [hy])) := by
+  subst_vars
+  rw [eqToHom_refl, eqToHom_refl, Category.comp_id, Category.id_comp]
+  apply functorOnHomOfCoveredPartwise_equal
+  rfl
+
+lemma functorOnHomOfCoveredPartwise_cast_left {x y x' : X} {n : ℕ} {γ : Dipath x y}
+  (hγ : covered_partwise hX γ n) (hx : x' = x) :
+    Fₙ ((covered_partwise_cast_iff hX γ hx rfl).mp hγ) = (eqToHom (by rw [hx])) ≫ (Fₙ hγ) := by
+  subst_vars
+  rw [eqToHom_refl, Category.id_comp]
+  apply functorOnHomOfCoveredPartwise_equal
+  rfl
+
+lemma functorOnHomOfCoveredPartwise_cast_right {x y y' : X} {n : ℕ} {γ : Dipath x y} (hγ : covered_partwise hX γ n) (hy : y' = y) :
+    Fₙ ((covered_partwise_cast_iff hX γ rfl hy).mp hγ) = (Fₙ hγ) ≫ (eqToHom (by rw [hy])) := by
+  subst_vars
+  rw [eqToHom_refl, Category.comp_id]
+  apply functorOnHomOfCoveredPartwise_equal
+  rfl
+
+lemma functorOnHomOfCoveredPartwise_refine_of_covered (k : ℕ):
+  Π {x y : X} {γ : Dipath x y} (hγ : covered hX γ),
+    Fₙ (covered_partwise_of_covered 0 hγ) = Fₙ (covered_partwise_of_covered k hγ) := by
+  induction k
+  case zero =>
+    intro x y γ hγ
+    rfl
+  case succ k ih =>
+    intro x y γ hγ
+    rw [functorOnHomOfCoveredPartwise_apply_succ hX h_comm (covered_partwise_of_covered k.succ hγ)]
+    show (FunctorOnHomOfCovered hX h_comm hγ) = _
+    have : 1 < k + 2 := by linarith
+    rw [functorOnHomOfCovered_split_comp hX h_comm hγ (Fraction.ofPos_pos (lt_trans zero_lt_one this)) (Fraction.ofPos_lt_one this)]
+    congr
+    apply ih
+    exact (covered_split_path (Fraction.ofPos_pos (lt_trans zero_lt_one this)) (Fraction.ofPos_lt_one this) hγ).2
+
+/--
+  When a path is partwise covered by n+1 paths, you can apply Fₙ to both parts of γ, when restricting to
+  [0, (d+1)/(n+1)] and [(d+1)/(n+1)]. This lemma states that the composition of these two gives Fₙ γ
+-/
+lemma functorOnHomOfCoveredPartwise_split {n : ℕ} :
+    Π {d : ℕ} (hdn : n > d) {x y : X} {γ : Dipath x y} (hγ : covered_partwise hX γ n),
+    Fₙ hγ = Fₙ (covered_partwise_first_part_d hX (Nat.succ_lt_succ hdn) hγ) ≫
+          Fₙ (covered_partwise_second_part_d hX (Nat.succ_lt_succ hdn) hγ) := by
+  induction n
+  case zero =>
+    intro d hd
+    linarith
+  case succ n ih_n =>
+    intro d hdn
+    induction d
+    case zero =>
+        intro x y γ hγ
+        rfl
+    case succ d _ =>
+      intro x y γ hγ
+      rw [functorOnHomOfCoveredPartwise_apply_succ hX h_comm hγ]
+      have : n > d := Nat.succ_lt_succ_iff.mp hdn
+      rw [ih_n this _]
+      rw [functorOnHomOfCoveredPartwise_apply_succ hX h_comm _]
+      rw [Category.assoc]
+      show F₀ _ ≫ (Fₙ _ ≫ Fₙ _) =  F₀ _ ≫ (Fₙ _ ≫ Fₙ _)
+      apply eq_of_morphism
+      · apply (comp_eqToHom_iff _ _ _).mp
+        rw [←functorOnHomOfCovered_cast_right]
+        apply functorOnHomOfCovered_equal
+        rw [SplitProperties.firstPart_of_firstPart γ (Nat.succ_lt_succ hdn) (Nat.succ_pos d.succ)]
+      · rw [←Category.assoc]
+        apply eq_of_morphism
+        · apply (comp_eqToHom_iff _ _ _).mp
+          apply (eqToHom_comp_iff _ _ _).mp
+          rw [←functorOnHomOfCoveredPartwise_cast]
+          apply functorOnHomOfCoveredPartwise_equal
+          rw [SplitProperties.first_part_of_second_part γ (hdn) (Nat.succ_pos d)]
+        · rw [←functorOnHomOfCoveredPartwise_cast_left]
+          apply functorOnHomOfCoveredPartwise_equal'
+          rw [SplitProperties.second_part_of_second_part γ (Nat.lt_of_succ_lt_succ hdn)]
+          rw [Nat.succ_sub_succ]
+
+/--
+  If a path can be covered partwise by `(n+1) ≥ 2` parts, its refinement by covering it by `k*(n+1)` parts is equal to the composition
+  of covering the first part in `k` parts and the second part in `k*n` parts.
+-/
+lemma functorOnHomOfCoveredPartwise_refine_apply (n k : ℕ) {x y : X} {γ : Dipath x y} (hγ : covered_partwise hX γ n.succ) :
+    Fₙ (covered_partwise_refine hX n.succ k hγ) =
+      (Fₙ $ covered_partwise_of_covered k hγ.left) ≫ (Fₙ $ covered_partwise_refine hX n k hγ.right) := by
+  have h₀ : k + 1 < (n+1+1) * (k + 1) := by
+    have : n + 1 + 1 > 1 := by linarith
+    convert Nat.mul_lt_mul_of_pos_right (this) (Nat.succ_pos k) using 1
+    exact (one_mul k.succ).symm
+
+  have h₁ : (n+1+1)*(k+1) - 1 > (k + 1) - 1 := Nat.pred_lt_pred (ne_of_gt (Nat.succ_pos k)) h₀
+  have h₂ := Fraction.eq_inv₁ (Nat.succ_pos k) (le_of_lt (Nat.succ_lt_succ h₁))
+  rw [functorOnHomOfCoveredPartwise_split hX h_comm h₁ (covered_partwise_refine hX n.succ k hγ)]
+
+  apply eq_of_morphism
+  · rw [←functorOnHomOfCoveredPartwise_cast_right hX h_comm _ (congr_arg γ h₂.symm)]
+    apply functorOnHomOfCoveredPartwise_equal hX h_comm
+    ext t
+    rw [Dipath.cast_apply]
+    exact SplitProperties.firstPart_eq_of_point_eq _ h₂.symm _
+  · rw [←functorOnHomOfCoveredPartwise_cast_left hX h_comm _ (congr_arg γ h₂.symm)]
+    apply functorOnHomOfCoveredPartwise_equal' hX h_comm
+    ext t
+    rw [Dipath.cast_apply]
+    exact SplitProperties.secondPart_eq_of_point_eq _ h₂.symm _
+    simp
+    rw [Nat.succ_mul, Nat.sub_right_comm, Nat.add_sub_cancel]
+
+lemma functorOnHomOfCoveredPartwise_refine {n : ℕ} (k : ℕ) :
+    Π {x y : X} {γ : Dipath x y} (hγ_n : covered_partwise hX γ n),
+      Fₙ hγ_n = Fₙ (covered_partwise_refine hX n k hγ_n) := by
+  induction n
+  case zero => apply functorOnHomOfCoveredPartwise_refine_of_covered
+  case succ n ih =>
+    intros x y γ hγ
+    rw [functorOnHomOfCoveredPartwise_refine_apply hX h_comm n k hγ]
+    rw [← functorOnHomOfCoveredPartwise_refine_of_covered hX h_comm _ hγ.left]
+    rw [functorOnHomOfCoveredPartwise_apply_succ hX h_comm hγ]
+    rw [ih hγ.right]
+    rfl
+
+lemma functorOnHomOfCoveredPartwise_apply_right_side {x y : X} {γ : Dipath x y} {n : ℕ} (hγ : covered_partwise hX γ n.succ) :
+    Fₙ hγ = Fₙ (covered_partwise_first_part_end_split hX hγ) ≫
+            F₀ (covered_second_part_end_split hX hγ) := by
+  rw [functorOnHomOfCoveredPartwise_split hX h_comm (Nat.lt_succ_self n)]
+  rw [functorOnHomOfCoveredPartwise_equal' hX h_comm rfl (Nat.sub_self n.succ)]
+  rw [functorOnHomOfCoveredPartwise_apply_0]
+
+lemma functorOnHomOfCoveredPartwise_trans_case_0 {x y z : X} {γ₁ : Dipath x y} {γ₂ : Dipath y z}
+  (hγ₁ : covered_partwise hX γ₁ 0) (hγ₂ : covered_partwise hX γ₂ 0) :
+    Fₙ (covered_partwise_trans hγ₁ hγ₂) = (Fₙ hγ₁) ≫ (Fₙ hγ₂) := by
+  rw [functorOnHomOfCoveredPartwise_apply_0]
+  rw [functorOnHomOfCoveredPartwise_apply_0]
+  rw [functorOnHomOfCoveredPartwise_apply_succ]
+  rw [functorOnHomOfCoveredPartwise_apply_0]
+  rw [functorOnHomOfCovered_equal hX h_comm (SplitProperties.first_part_trans γ₁ γ₂) _ ((covered_cast_iff γ₁ hX _ _).mp hγ₁)]
+  rw [functorOnHomOfCovered_equal hX h_comm (SplitProperties.second_part_trans γ₁ γ₂) _ ((covered_cast_iff γ₂ hX _ _).mp hγ₂)]
+  rw [functorOnHomOfCovered_cast_right hX h_comm hγ₁]
+  rw [functorOnHomOfCovered_cast_left hX h_comm hγ₂]
+  simp
+
+lemma functorOnHomOfCoveredPartwise_trans {n : ℕ} :
+    Π {x y z : X} {γ₁ : Dipath x y} {γ₂ : Dipath y z} (hγ₁ : covered_partwise hX γ₁ n) (hγ₂ : covered_partwise hX γ₂ n),
+      Fₙ (covered_partwise_trans hγ₁ hγ₂) = (Fₙ hγ₁) ≫ (Fₙ hγ₂) := by
+  induction n
+  case zero =>
+    intro x y z γ₁ γ₂ hγ₁ hγ₂
+    exact functorOnHomOfCoveredPartwise_trans_case_0 hX h_comm hγ₁ hγ₂
+  case succ n ih =>
+    intros x y z γ₁ γ₂ hγ₁ hγ₂
+    rw [functorOnHomOfCoveredPartwise_apply_succ hX h_comm]
+    rw [functorOnHomOfCoveredPartwise_apply_succ hX h_comm hγ₁]
+    rw [Category.assoc]
+    apply eq_of_morphism
+    · rw [←functorOnHomOfCovered_cast_right]
+      apply functorOnHomOfCovered_equal
+      ext t
+      rw [Dipath.cast_apply]
+      exact SplitProperties.trans_first_part γ₁ γ₂ n.succ t
+      exact SplitProperties.trans_image_inv_eq_first γ₁ γ₂ n.succ
+    · rw [functorOnHomOfCoveredPartwise_apply_right_side hX h_comm hγ₂]
+      rw [functorOnHomOfCoveredPartwise_cast_params hX h_comm rfl (Nat.pred_succ n)]
+      rw [←Category.assoc (Fₙ _) _ _]
+      rw [←ih _ _]
+      have : (n.succ + n.succ).succ - 1 = (n + n).succ.succ := by
+        rw [Nat.sub_one]
+        rw [Nat.pred_succ (n.succ + n.succ)]
+        rw [Nat.succ_add]
+        rw [Nat.add_succ]
+      rw [functorOnHomOfCoveredPartwise_cast_params hX h_comm rfl this]
+      rw [←Category.assoc _ _]
+      rw [←functorOnHomOfCoveredPartwise_cast_left]
+      rw [functorOnHomOfCoveredPartwise_apply_right_side hX h_comm _]
+      apply eq_of_morphism
+      · rw [←functorOnHomOfCoveredPartwise_cast_right]
+        apply functorOnHomOfCoveredPartwise_equal' hX h_comm _ rfl
+        pick_goal 3
+        ext t
+        rw [Dipath.cast_apply]
+        rw [Dipath.cast_apply]
+        sorry
+        sorry
+        sorry
+        -- exact SplitProperties.trans_first_part_of_second_part γ₁ γ₂ n t
+        -- exact SplitProperties.second_part_trans_image_inv_eq_second γ₁ γ₂ n
+      · rw [←functorOnHomOfCovered_cast_left]
+        apply functorOnHomOfCovered_equal
+        ext t
+        rw [Dipath.cast_apply]
+        exact SplitProperties.trans_second_part_second_part γ₁ γ₂ n t
+        exact SplitProperties.second_part_trans_image_inv_eq_second γ₁ γ₂ n
+      -- exact SplitProperties.trans_image_inv_eq_first γ₁ γ₂ n.succ
+
+lemma functorOnHomOfCoveredPartwise_unique {n m : ℕ} {γ : Dipath x y}
+  (hγ_n : covered_partwise hX γ n) (hγ_m : covered_partwise hX γ m) :
+    Fₙ hγ_n = Fₙ hγ_m := by
+  rw [functorOnHomOfCoveredPartwise_refine hX h_comm m hγ_n]
+  rw [functorOnHomOfCoveredPartwise_refine hX h_comm n hγ_m]
+  congr 2
+  exact mul_comm _ _
 
 end PushoutFunctor
-
 end DirectedVanKampen

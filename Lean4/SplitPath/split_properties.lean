@@ -271,10 +271,10 @@ lemma first_part_of_second_part (γ : Dipath x₀ x₁) {n k : ℕ} (hkn : k < n
 lemma second_part_of_second_part (γ : Dipath x₀ x₁) {n k : ℕ} (hkn : k < n) :
   SecondPartDipath
     (SecondPartDipath γ (Fraction.ofPos (Nat.succ_pos n.succ))) -- 1/(n+2)
-    (Fraction (Nat.succ_pos n) (Nat.succ_lt_succ hkn)) -- (k+1)/(n+1)
+    (Fraction (Nat.succ_pos n) (le_of_lt $ Nat.succ_lt_succ hkn)) -- (k+1)/(n+1)
   =
   (
-    SecondPartDipath γ (Fraction (Nat.succ_pos n.succ) (Nat.succ_lt_succ (Nat.succ_lt_succ hkn))) -- (k+2)/(n+2)
+    SecondPartDipath γ (Fraction (Nat.succ_pos n.succ) (le_of_lt $ Nat.succ_lt_succ (Nat.succ_lt_succ hkn))) -- (k+2)/(n+2)
   ).cast
     (show γ _ = γ _ by
       congr 1
@@ -283,7 +283,6 @@ lemma second_part_of_second_part (γ : Dipath x₀ x₁) {n k : ℕ} (hkn : k < 
         rw [←Nat.cast_succ]
         exact Nat.cast_pos.mpr (Nat.succ_pos n)
       rw [←one_div, FractionEqualities.one_sub_inverse_of_add_one, FractionEqualities.frac_cancel', ← add_div]
-      · ring
       · linarith
       · linarith
     )
