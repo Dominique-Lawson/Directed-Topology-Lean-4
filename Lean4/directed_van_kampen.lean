@@ -1011,4 +1011,23 @@ lemma functor_uniq (F' : (dπₓ X) ⟶ C) (h₁ : (dπₘ j₁) ≫ F' = F₁) 
   exact functor_uniq_aux_map hX X₁_open X₂_open h_comm F' h₁ h₂ hn
 
 end PushoutFunctor
+
+/--
+  The Van Kampen Theorem: the fundamental category functor dπ induces a pushout in the category of categories.
+-/
+theorem directed_van_kampen (_ : IsOpen X₁) (_ : IsOpen X₂) (hX : X₁ ∪ X₂ = Set.univ) :
+    IsPushout (dπₘ i₁) (dπₘ i₂) (dπₘ j₁) (dπₘ j₂) := by
+  apply PushoutAlternative.isPushout_alternative
+  · rw [←Functor.map_comp]
+    rw [←Functor.map_comp]
+    exact congr_arg dπₘ rfl
+  intros C F₁ F₂ h_comm
+  use (PushoutFunctor.Functor hX X₁_open X₂_open h_comm)
+  constructor
+  constructor
+  · apply PushoutFunctor.functor_comp_left
+  · apply PushoutFunctor.functor_comp_right
+  · rintro F' ⟨h₁, h₂⟩
+    exact PushoutFunctor.functor_uniq hX X₁_open X₂_open h_comm F' h₁ h₂
+
 end DirectedVanKampen
