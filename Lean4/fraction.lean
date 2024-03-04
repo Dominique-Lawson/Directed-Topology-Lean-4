@@ -70,14 +70,17 @@ lemma eq_inv₁ {i n : ℕ} (i_pos : 0 < i) (hi_n : (i - 1).succ ≤ ((n+1) * i 
   have : (↑(i - 1) : ℝ) + 1 = i := by
     nth_rewrite 1 [←Nat.succ_pred_eq_of_pos i_pos]
     simp
-    sorry
+    rw [←Nat.cast_succ]
+    rw [Nat.succ_pred_eq_of_pos i_pos]
 
   rw [this]
   have : (↑((n+1)* i - 1) : ℝ) + 1 = (↑n+1)*↑i := by
     rw [←Nat.cast_succ n, ←Nat.cast_mul]
     nth_rewrite 1 [←Nat.succ_pred_eq_of_pos (mul_pos (Nat.succ_pos n) i_pos)]
     simp
-    sorry
+    rw [←Nat.cast_succ]
+    rw [Nat.succ_pred_eq_of_pos (mul_pos (Nat.succ_pos n) i_pos)]
+    simp
 
   rw [this, div_mul_left _]
   exact (one_div _).symm
@@ -116,5 +119,15 @@ lemma ofPos_pos {n : ℕ} (hn : 0 < n) : 0 < ofPos hn := pos_of_pos zero_lt_one 
 For any `n : ℕ` with `n > 1`, we have that `1/n < 1`.
 -/
 lemma ofPos_lt_one {n : ℕ} (hn : 1 < n) : ofPos (lt_trans zero_lt_one hn) < 1 := lt_one_of_lt zero_le_one hn
+
+/- TODO: Rename?
+For any `n m : ℕ` with `m < n`, we have that `m/n ≤ (m+1) ≤ n`
+-/
+lemma lt_frac_succ {n m : ℕ} (hn : m < n) :
+    Fraction (lt_of_le_of_lt (Nat.zero_le m) hn) (le_of_lt hn) ≤
+    Fraction (lt_of_le_of_lt (Nat.zero_le m) hn) (Nat.succ_le_of_lt hn) := by
+  simp
+  exact div_le_div (by linarith) (by linarith)
+    (Nat.cast_pos.mpr (lt_of_le_of_lt (Nat.zero_le m) hn)) (le_refl (n : ℝ))
 
 end Fraction
