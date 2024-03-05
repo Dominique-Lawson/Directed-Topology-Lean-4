@@ -34,12 +34,3 @@ lemma map_eq_map_of_eq {F₁ F₂ : C ⥤ C'} (h : F₁ = F₂) {x y : C} (f : x
     F₁.map f = (eqToHom (obj_eq_obj_of_eq h x)) ≫ F₂.map f ≫ (eqToHom (obj_eq_obj_of_eq h y).symm) := by
   subst_vars
   simp
-
--- TODO: These seem duplicates of the previous two lemmas
--- lemma eq_of_functor_obj {F G : C ⟶ C'} (h : F = G) (x : C) : F.obj x = G.obj x :=
---   congrFun (congrArg Prefunctor.obj (congrArg Functor.toPrefunctor h)) x
-
--- lemma eq_of_functor_map {F G : C ⟶ C'} (h : F = G) {x y : C} (f : x ⟶ y) :
---     F.map f = (eqToHom (eq_of_functor_obj h x)) ≫ G.map f ≫ (eqToHom (eq_of_functor_obj h y).symm) := by
---   subst_vars
---   simp

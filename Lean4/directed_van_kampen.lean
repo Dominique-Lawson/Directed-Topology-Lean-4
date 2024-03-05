@@ -567,13 +567,13 @@ lemma functorOnHomOfCoveredPartwise_trans {n : ℕ} :
         rw [Dipath.cast_apply]
         exact SplitProperties.trans_first_part_of_second_part γ₁ γ₂ n t
         exact SplitProperties.trans_image_inv_eq_first γ₁ γ₂ n.succ
-        exact SplitProperties.second_part_trans_image_inv_eq_second γ₁ γ₂ n
+        exact SplitProperties.second_part_trans_eval_at_end γ₁ γ₂ n
       · rw [←functorOnHomOfCovered_cast_left]
         apply functorOnHomOfCovered_equal
         ext t
         rw [Dipath.cast_apply]
         exact SplitProperties.trans_second_part_second_part γ₁ γ₂ n t
-        exact SplitProperties.second_part_trans_image_inv_eq_second γ₁ γ₂ n
+        exact SplitProperties.second_part_trans_eval_at_end γ₁ γ₂ n
 
 lemma functorOnHomOfCoveredPartwise_unique {n m : ℕ} {γ : Dipath x y}
   (hγ_n : covered_partwise hX γ n) (hγ_m : covered_partwise hX γ m) :

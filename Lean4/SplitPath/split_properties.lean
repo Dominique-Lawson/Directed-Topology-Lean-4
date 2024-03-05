@@ -664,7 +664,7 @@ lemma trans_second_part_second_part (γ₁: Dipath x₀ x₁) (γ₂ : Dipath x�
 
 /--
 If `γ₁` and `γ₂` are two paths, then `γ₁.trans γ₂` evaluated at `1/(2n+2)` is the same as
-`γ₁` evaluated at `1/(n+1)`. -- TODO: Generalize
+`γ₁` evaluated at `1/(n+1)`.
 -/
 lemma trans_image_inv_eq_first (γ₁: Dipath x₀ x₁) (γ₂ : Dipath x₁ x₂) (n : ℕ) :
     (γ₁.trans γ₂) (Fraction.ofPos (Nat.succ_pos (n + n).succ)) =
@@ -678,9 +678,9 @@ lemma trans_image_inv_eq_first (γ₁: Dipath x₀ x₁) (γ₂ : Dipath x₁ x�
 
 /--
 If `γ₁` and `γ₂` are two paths, then `γ₁.trans γ₂` --> `[1/(2n+4), 1]` evaluated at `(2n+2)/(2n+3)` is the same as
-`γ₂` evaluated at `(n+1)/(n+2)`. -- TODO: Rename
+`γ₂` evaluated at `(n+1)/(n+2)`.
 -/
-lemma second_part_trans_image_inv_eq_second (γ₁: Dipath x₀ x₁) (γ₂ : Dipath x₁ x₂) (n : ℕ) :
+lemma second_part_trans_eval_at_end (γ₁: Dipath x₀ x₁) (γ₂ : Dipath x₁ x₂) (n : ℕ) :
     (SecondPartDipath (γ₁.trans γ₂) $ Fraction.ofPos $ Nat.succ_pos (n.succ + n.succ).succ)
     (Fraction (Nat.succ_pos (n+n).succ.succ) (le_of_lt (Nat.lt_succ_self _)))
     = γ₂ (Fraction (Nat.succ_pos (n.succ)) (le_of_lt (Nat.lt_succ_self _))) := by
