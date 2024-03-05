@@ -53,7 +53,6 @@ instance directedSpace_forget (X : dTopCat) : DirectedSpace <| (forget dTopCat).
 @[simp]
 lemma coe_of (X : Type u) [DirectedSpace X] : (of X : Type u) = X := rfl
 
--- TODO: Change to Coe?
 instance subspace_coe {X : dTopCat} : CoeTC (Set X) dTopCat := ⟨fun s => dTopCat.of s⟩
 
 def DirectedSubtypeHom {X : dTopCat} (Y : Set X) : (dTopCat.of Y) ⟶ X :=
