@@ -8,7 +8,7 @@ This is the port to Lean 4. A version using Lean 3 already exists in a different
 
 ## Installation
 Installing Lean can be done by following the [leanprover community website](https://leanprover-community.github.io/get_started.html).
-Our project uses Lean version 4.20.
+Our project uses Lean version 4.6.0.
 
 This repository can then be cloned by following the instructions on [this page](https://leanprover-community.github.io/install/project.html).
 
