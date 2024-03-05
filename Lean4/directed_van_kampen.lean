@@ -116,7 +116,6 @@ local notation "F_obj" => FunctorOnObj hX F₁ F₂
 variable {F₁ F₂}
 
 lemma functorOnObj_apply_one {x : X} (hx : x ∈ X₁) : F₁.obj ⟨x, hx⟩ = F_obj ⟨x⟩ := by
-  -- TODO: This is unnecessary, but forces Lean to add the condition h_comm to functor_obj_apply_one. This keeps the symmetry
   have := h_comm
   convert (dif_pos hx).symm using 1
   rfl
@@ -351,7 +350,6 @@ end FunctorOnHomOfCoveredProperties
 -  ### Define the behaviour on partwise covered paths
 -/
 
--- TODO: This definition now has (x y γ) instead of {x y γ} forcing an auxiliary function.
 def FunctorOnHomOfCoveredPartwiseAux {n : ℕ} :
     ∀ (x y : X) (γ : Dipath x y) (_ : covered_partwise hX γ n), F_obj ⟨x⟩ ⟶ F_obj ⟨y⟩ :=
   Nat.recOn n

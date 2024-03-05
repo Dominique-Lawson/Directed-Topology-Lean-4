@@ -702,7 +702,6 @@ protected def Quotient (x₀ x₁ : X) := Quotient (Dihomotopic.setoid x₀ x₁
 
 attribute [local instance] Dihomotopic.setoid
 
--- TODO: Is this right?
 instance : Inhabited (Dihomotopic.Quotient x₀ x₀) :=
   ⟨Quotient.mk' <| Dipath.refl x₀⟩
 
