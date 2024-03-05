@@ -476,7 +476,7 @@ lemma functorOnHomOfCoveredPartwise_refine_apply (n k : ℕ) {x y : X} {γ : Dip
     exact (one_mul k.succ).symm
 
   have h₁ : (n+1+1)*(k+1) - 1 > (k + 1) - 1 := Nat.pred_lt_pred (ne_of_gt (Nat.succ_pos k)) h₀
-  have h₂ := Fraction.eq_inv₁ (Nat.succ_pos k) (le_of_lt (Nat.succ_lt_succ h₁))
+  have h₂ := FractionEqualities.eq_inv₁ (Nat.succ_pos k) (le_of_lt (Nat.succ_lt_succ h₁))
   rw [functorOnHomOfCoveredPartwise_split hX h_comm h₁ (covered_partwise_refine hX n.succ k hγ)]
 
   apply eq_of_morphism

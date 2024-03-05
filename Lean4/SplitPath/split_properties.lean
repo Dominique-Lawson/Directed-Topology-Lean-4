@@ -213,7 +213,8 @@ lemma secondPart_range_interval (γ : Dipath x₀ x₁) {i n : ℕ} (hi : i < n)
       _ = ↑n * (↑n + 1)⁻¹ * (↑n)⁻¹ := by ring
       _ =  (1 - (↑n + 1)⁻¹) * (↑n)⁻¹ := by rw [h₁]
 
-  apply interval_cast (secondPart_image γ (Fraction.ofPos (Nat.succ_pos n)) _ _ (Fraction.lt_frac_succ hi))
+  apply interval_cast (secondPart_image γ (Fraction.ofPos (Nat.succ_pos n)) _ _
+    (le_of_lt (Fraction.lt_frac_succ hi)))
   · simp
     calc (i + 1 : ℝ)/(↑n + 1)
       _ = ↑i/(↑n + 1) + 1/(↑n+1)                          := by ring
@@ -271,8 +272,8 @@ lemma secondPart_range_partial_interval (γ : Dipath x₀ x₁) {i d n : ℕ} (h
         exact lt_tsub_iff_right.mp this
       )) -- (i+d+2)/(n+1)
     := by
-  apply interval_cast
-    (secondPart_image γ (Fraction (Nat.succ_pos n) (le_of_lt hd)) _ _ (Fraction.lt_frac_succ hi))
+  apply interval_cast (secondPart_image γ (Fraction (Nat.succ_pos n) (le_of_lt hd)) _ _
+    (le_of_lt (Fraction.lt_frac_succ hi)))
   · simp
     have : d < n := Nat.lt_of_succ_lt_succ hd
     rw [Nat.cast_sub (le_of_lt this)]

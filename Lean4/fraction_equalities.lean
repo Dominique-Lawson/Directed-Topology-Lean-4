@@ -29,4 +29,29 @@ lemma frac_special {a b c : ℝ} (hbc : b ≠ c) (hc : c + 1 ≠ 0) :
   · exact (div_add_div_same _ _ _).symm
   · exact sub_ne_zero_of_ne hbc.symm
 
+/-- TODO: Find right name
+  For any `i n : ℕ` with `i > 0` and `i ≤ (n + 1) * i`, we have that `1 / (n + 1) = i / (n + 1) * i`.
+-/
+lemma eq_inv₁ {i n : ℕ} (i_pos : 0 < i) (hi_n : (i - 1).succ ≤ ((n+1) * i - 1).succ) :
+    Fraction.ofPos (Nat.succ_pos n) = Fraction (Nat.succ_pos _) hi_n := by
+  simp
+  have : (↑(i - 1) : ℝ) + 1 = i := by
+    nth_rewrite 1 [←Nat.succ_pred_eq_of_pos i_pos]
+    simp
+    rw [←Nat.cast_succ]
+    rw [Nat.succ_pred_eq_of_pos i_pos]
+
+  rw [this]
+  have : (↑((n+1)* i - 1) : ℝ) + 1 = (↑n+1)*↑i := by
+    rw [←Nat.cast_succ n, ←Nat.cast_mul]
+    nth_rewrite 1 [←Nat.succ_pred_eq_of_pos (mul_pos (Nat.succ_pos n) i_pos)]
+    simp
+    rw [←Nat.cast_succ]
+    rw [Nat.succ_pred_eq_of_pos (mul_pos (Nat.succ_pos n) i_pos)]
+    simp
+
+  rw [this, div_mul_left _]
+  exact (one_div _).symm
+  exact ne_of_gt (Nat.cast_pos.mpr i_pos)
+
 end FractionEqualities
