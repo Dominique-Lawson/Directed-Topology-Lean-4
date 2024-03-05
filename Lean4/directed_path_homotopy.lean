@@ -39,9 +39,6 @@ section
 
 variable {p₀ p₁ : Dipath x₀ x₁}
 
--- TODO: Unnecessary?
-instance : CoeFun (Dihomotopy p₀ p₁) (fun _ => I × I → X) := ⟨fun F => F.toFun⟩
-
 lemma coeFn_injective : @Function.Injective (Dihomotopy p₀ p₁) (I × I → X) (⇑) :=
   DFunLike.coe_injective
 
@@ -86,8 +83,8 @@ Evaluating a dipath homotopy at an intermediate point, giving us a `dipath`.
 -/
 def eval (F : Dihomotopy p₀ p₁) (t : I) : Dipath x₀ x₁ where
   toFun := F.toDihomotopy.curry t
-  source' := by simp; exact F.source _ -- TODO: Why does simp not understand source?
-  target' := by simp; exact F.target _
+  source' := by simp
+  target' := by simp
   dipath_toPath := DirectedUnitInterval.isDipath_of_isDipath_comp_id
     $ (F.toDihomotopy.curry t).directed_toFun DirectedUnitInterval.IdentityPath
       DirectedUnitInterval.isDipath_identityPath
@@ -177,7 +174,6 @@ lemma hcomp_apply_right (ht : 2⁻¹ ≤ (t : ℝ)) :
   split_ifs
   · have : (t : ℝ) = 2⁻¹ := by linarith
     simp [this]
-    exact (G.source _).symm
   · rfl
 
 lemma hcomp_first_case (F : Dihomotopy p₀ q₀) (G : Dihomotopy p₁ q₁) {a₀ a₁ : I × I} {γ : Path a₀ a₁}
@@ -561,7 +557,6 @@ end
 
 namespace Dihomotopic
 
--- TODO: Remove if unnecessary?
 lemma equivalence : Equivalence (@Dihomotopic X _ x₀ x₁) := by apply EqvGen.is_equivalence
 
 /-- If `p` is dihomotopic with `q`, then `f ∘ p` is dihomotopic with `f ∘ q` for any directed map `f` -/
