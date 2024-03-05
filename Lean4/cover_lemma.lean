@@ -39,6 +39,24 @@ lemma mid_point_I {i n : ℕ} (hi : i < n) : (2 * i + 1 : ℝ)/(2 * n : ℝ) ∈
     have : (↑(2 * i  + 1) : ℝ) ≤ ↑(2 * n) := Nat.cast_le.mpr this
     convert this <;> simp
 
+namespace UnitIntervalSub
+
+open Set
+
+lemma mem_I_of_mem_interval {t : ℝ} {n i : ℕ} (hi : i < n.succ) (h : t ∈ Icc ((i:ℝ)/↑(n.succ)) (↑(i+1)/↑(n.succ))) :
+    t ∈ I := by
+  constructor
+  exact le_trans (div_nonneg (Nat.cast_nonneg i) (Nat.cast_nonneg n.succ)) h.1
+  exact le_trans h.2 ((div_le_one (show (n.succ : ℝ) > 0 by
+    exact Nat.cast_pos.mpr (Nat.succ_pos n))).mpr (Nat.cast_le.mpr (Nat.succ_le_of_lt hi)))
+
+lemma mem_I_of_mem_interval_coed {t : ℝ} {n i : ℕ} (hi : i < n.succ) (h : t ∈ Icc ((i:ℝ)/(↑n+1)) ((↑i+1)/(↑n+1))) :
+    t ∈ I := by
+  apply mem_I_of_mem_interval hi
+  convert h <;> exact Nat.cast_succ _
+
+end UnitIntervalSub
+
 /-! ### Covering lemma for the unit interval -/
 
 theorem lebesgue_number_lemma_unit_interval {ι : Sort u} {c : ι → Set ℝ}
@@ -92,6 +110,23 @@ def UnitSubsquare {n m i j : ℕ} (hi : i < n.succ) (hj : j < m.succ) : Set (I �
   fun (a : I × I) =>
     ((Fraction (Nat.succ_pos n) (le_of_lt hi)) ≤ a.1 ∧ a.1 ≤ (Fraction (Nat.succ_pos n) (Nat.succ_le_of_lt hi))) ∧
     (Fraction (Nat.succ_pos m) (le_of_lt hj)) ≤ a.2 ∧ a.2 ≤ (Fraction (Nat.succ_pos m) (Nat.succ_le_of_lt hj))
+
+namespace UnitSubsquare
+
+open Set
+
+lemma mem_unitSquare (t : I × I) : t ∈ UnitSubsquare zero_lt_one zero_lt_one := by
+  unfold UnitSubsquare
+  rw [Fraction.eq_zero, Fraction.eq_one]
+  exact ⟨⟨t.1.2.1, t.1.2.2⟩, ⟨t.2.2.1, t.2.2.2⟩⟩
+
+lemma mem_unitSubsquare {t₀ t₁ : ℝ} {n m i j : ℕ} (hi : i < n.succ) (hj : j < m.succ)
+  (ht₀ : t₀ ∈ Icc ((i : ℝ)/↑(n.succ)) (↑(i+1)/↑(n.succ))) (ht₁ : t₁ ∈ Icc ((j : ℝ)/↑(m.succ)) (↑(j+1)/↑(m.succ))) :
+    ((⟨t₀, UnitIntervalSub.mem_I_of_mem_interval hi ht₀⟩ : I),
+      (⟨t₁, UnitIntervalSub.mem_I_of_mem_interval hj ht₁⟩ : I)) ∈ UnitSubsquare hi hj :=
+  ⟨⟨ht₀.1, ht₀.2⟩, ⟨ht₁.1, ht₁.2⟩⟩
+
+end UnitSubsquare
 
 theorem lebesgue_number_lemma_unit_square {ι : Sort u} {c : ι → Set (I × I)}
   (hc₁ : ∀ (i : ι), IsOpen (c i)) (hc₂ : UnitSquare ⊆ (⋃ (i : ι), c i)) :
