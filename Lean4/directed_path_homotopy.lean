@@ -128,7 +128,7 @@ def trans (F : Dihomotopy p₀ p₁) (G : Dihomotopy p₁ p₂) : Dihomotopy p�
 lemma trans_apply (F : Dihomotopy p₀ p₁) (G : Dihomotopy p₁ p₂) (x : I × I) :
   (F.trans G) x =
     if h : (x.1 : ℝ) ≤ 1/2 then
-      F (⟨2 * x.1, (unitInterval.mul_pos_mem_iff zero_lt_two).2 ⟨x.1.2.1, h⟩⟩, x.2)
+      F (⟨2 * x.1, (unitInterval.mul_pos_mem_iff two_pos).2 ⟨x.1.2.1, h⟩⟩, x.2)
     else
       G (⟨2 * x.1 - 1, unitInterval.two_mul_sub_one_mem_iff.2 ⟨(not_le.1 h).le, x.1.2.2⟩⟩, x.2) :=
 DirectedMap.DihomotopyRel.trans_apply _ _ _
@@ -397,7 +397,7 @@ def hcomp (F : Dihomotopy p₀ q₀) (G : Dihomotopy p₁ q₁) :
 lemma hcomp_apply (F : Dihomotopy p₀ q₀) (G : Dihomotopy p₁ q₁) (x : I × I) :
     F.hcomp G x =
       if h : (x.2 : ℝ) ≤ 1/2 then
-        F.eval x.1 ⟨2 * x.2, (unitInterval.mul_pos_mem_iff zero_lt_two).2 ⟨x.2.2.1, h⟩⟩
+        F.eval x.1 ⟨2 * x.2, (unitInterval.mul_pos_mem_iff two_pos).2 ⟨x.2.2.1, h⟩⟩
       else
         G.eval x.1 ⟨2 * x.2 - 1, unitInterval.two_mul_sub_one_mem_iff.2 ⟨(not_le.1 h).le, x.2.2.2⟩⟩ :=
   show ite _ _ _ = _ by split_ifs <;> exact Path.extend_extends _ _
@@ -523,8 +523,8 @@ Given `F : Dihomotopy p q`, and `f : D(X, Y)`, there is a dihomotopy from `p.map
 def map {p q : Dipath x₀ x₁} (F : Dihomotopy p q) (f : D(X, Y)) :
     Dihomotopy (p.map f) (q.map f) where
   toFun := f ∘ F
-  map_zero_left := fun _ => by simp; rfl
-  map_one_left := fun _ => by simp; rfl
+  map_zero_left := fun _ => by simp
+  map_one_left := fun _ => by simp
   prop' := fun t x hx => by
     unfold DirectedMap.prod_const_fst DirectedMap.prod_map_mk
 

@@ -356,7 +356,7 @@ lemma covered_partwise_trans  {hX : X₀ ∪ X₁ = Set.univ} {n : ℕ} {x₀ x�
   apply covered_partwise_of_covered_by_intervals
   intros i hi
   have h_lt : n.succ < (n + n).succ.succ := by linarith
-  have h₁ : Fraction (Nat.succ_pos (n + n).succ) (le_of_lt h_lt) = Fraction (two_pos) (le_of_lt one_lt_two) := by
+  have h₁ : Fraction (Nat.succ_pos (n + n).succ) (le_of_lt h_lt) = Fraction.ofPos two_pos := by
     simp
     rw [←one_div]
     apply (div_eq_div_iff _ _).mpr

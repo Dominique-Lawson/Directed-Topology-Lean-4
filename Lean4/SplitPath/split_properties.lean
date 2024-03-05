@@ -421,18 +421,17 @@ variable {x₂ : X}
 If `γ₁` and `γ₂` are two paths, then the first part of `γ₁.trans γ₂` split at `1/2` is `γ₁`
 -/
 lemma first_part_trans (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath x₁ x₂) :
-    (FirstPartDipath (γ₁.trans γ₂) (Fraction zero_lt_two one_le_two)) =
+    (FirstPartDipath (γ₁.trans γ₂) (Fraction.ofPos two_pos)) =
       γ₁.cast rfl (Dipath.trans_eval_at_half γ₁ γ₂) := by
   ext t
   rw [first_part_apply, Dipath.trans_apply]
   simp [t.2.2]
-  rfl
 
 /--
 If `γ₁` and `γ₂` are two paths, then the second part of `γ₁.trans γ₂` split at `1/2` is `γ₂`
 -/
 lemma second_part_trans (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath x₁ x₂) :
-    (SecondPartDipath (γ₁.trans γ₂) (Fraction zero_lt_two one_le_two)) =
+    (SecondPartDipath (γ₁.trans γ₂) (Fraction.ofPos two_pos)) =
     γ₂.cast (Dipath.trans_eval_at_half γ₁ γ₂) rfl := by
   ext t
   rw [second_part_apply, Dipath.trans_apply]
@@ -447,9 +446,7 @@ lemma second_part_trans (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath x₁ x₂) :
   by_cases h : 2⁻¹ * (t : ℝ) ≤ 0
   · have : t = 0 := Subtype.coe_inj.mp (show (t : ℝ) = 0 by linarith [t.2.1])
     simp [h, this]
-    exact (Dipath.trans_eval_at_half _ _).symm
   · simp [h, ht]
-    rfl
 
 /--
 If `γ₁` and `γ₂` are two paths, then the first part of `γ₁.trans γ₂` split at `1/(2n + 2)` is the
@@ -467,7 +464,7 @@ lemma trans_first_part (γ₁: Dipath x₀ x₁) (γ₂ : Dipath x₁ x₂) (n :
     have : (↑(n + n) : ℝ) ≥ 0 := Nat.cast_nonneg (n + n)
     linarith
 
-  have h₁ : (n + n + 1 + 1 : ℝ)⁻¹ ≤ 2⁻¹ := inv_le_inv_of_le zero_lt_two this
+  have h₁ : (n + n + 1 + 1 : ℝ)⁻¹ ≤ 2⁻¹ := inv_le_inv_of_le two_pos this
   have : (n + n + 1 + 1 : ℝ)⁻¹ * ↑t ≤ 2⁻¹
   · rw [← mul_one (2⁻¹ : ℝ)]
     apply mul_le_mul h₁ t.2.2 t.2.1

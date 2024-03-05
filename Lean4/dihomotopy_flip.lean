@@ -115,7 +115,7 @@ lemma hcomp'_apply (F : Dihomotopy p₀.toDirectedMap q₀.toDirectedMap) (G : D
   (h : (F.eval_at_right 1).toDirectedMap = (G.eval_at_right 0).toDirectedMap) (t₁ t₂ : I) :
     (hcomp' F G h) (t₁, t₂) =
     if h : (t₂ : ℝ) ≤ 1/2 then
-      F.eval_at_left t₁ ⟨2 * t₂, (unitInterval.mul_pos_mem_iff zero_lt_two).2 ⟨t₂.2.1, h⟩⟩
+      F.eval_at_left t₁ ⟨2 * t₂, (unitInterval.mul_pos_mem_iff two_pos).2 ⟨t₂.2.1, h⟩⟩
     else
       G.eval_at_left t₁ ⟨2 * t₂ - 1, unitInterval.two_mul_sub_one_mem_iff.2 ⟨(not_le.1 h).le, t₂.2.2⟩⟩ := by
   unfold hcomp'

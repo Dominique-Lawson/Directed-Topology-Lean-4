@@ -64,10 +64,6 @@ end
 
 variable {f₀ f₁ : D(X, Y)}
 
--- TODO: Remove if unnecessary in Lean4.
-instance : CoeFun (Dihomotopy f₀ f₁) (fun _ => I × X → Y) := DFunLike.hasCoeToFun
-@[simp] lemma to_fun_eq_coe {f : Dihomotopy f₀ f₁} : f.toFun = (f : I × X → Y) := rfl
-
 @[ext] theorem ext {f g : Dihomotopy f₀ f₁} (h : ∀ x, f x = g x) : f = g := DFunLike.ext _ _ h
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
@@ -153,7 +149,7 @@ Given a directed map `f`, we can define a `dihomotopy f f` by `F (t, x) = f x`
 lemma directed_refl (f : D(X, Y)) : Directed (↑(ContinuousMap.Homotopy.refl (↑f : C(X, Y))) : C(I × X, Y)) :=
   fun _ _ γ γ_dipath => (f.directed_toFun (γ.map continuous_snd) (directed_snd.directed_toFun γ γ_dipath))
 
--- TODO: @[simps]
+@[simps!]
 def refl (f : D(X, Y)) : Dihomotopy f f := hom_to_dihom _ (directed_refl f)
 
 instance : Inhabited (Dihomotopy (DirectedMap.id X) (DirectedMap.id X)) := ⟨Dihomotopy.refl _⟩
@@ -385,7 +381,7 @@ def trans {f₂ : D(X, Y)} (F : Dihomotopy f₀ f₁) (G: Dihomotopy f₁ f₂) 
         _ = if h : ((a₁ x).1 : ℝ) ≤ 1/2
             then F (⟨2 * ((a₁ x).1 : ℝ), by { simp at h; exact double_mem_I h }⟩, (a₁ x).2)
             else G (⟨2 * ((a₁ x).1 : ℝ) - 1, by { simp at h; exact double_sub_one_mem_I (le_of_lt h) }⟩, (a₁ x).2)
-                  := by { simp only [h₀, this]; simp } -- TODO: Improve?
+                  := by { simp only [h₀, this]; simp }
         _ = if h : ((a₁ x).1 : ℝ) ≤ 1/2
             then Fₕ (⟨2 * ((a₁ x).1 : ℝ), by { simp at h; exact double_mem_I h }⟩, (a₁ x).2)
             else Gₕ (⟨2 * ((a₁ x).1 : ℝ) - 1, by { simp at h; exact double_sub_one_mem_I (le_of_lt h) }⟩, (a₁ x).2)
@@ -434,7 +430,7 @@ def trans {f₂ : D(X, Y)} (F : Dihomotopy f₀ f₁) (G: Dihomotopy f₁ f₂) 
 lemma trans_apply {f₀ f₁ f₂ : D(X, Y)} (F : Dihomotopy f₀ f₁) (G : Dihomotopy f₁ f₂) (x : I × X) :
   (F.trans G) x =
   if h : (x.1 : ℝ) ≤ 1/2 then
-    F (⟨2 * x.1, (unitInterval.mul_pos_mem_iff zero_lt_two).2 ⟨x.1.2.1, h⟩⟩, x.2)
+    F (⟨2 * x.1, (unitInterval.mul_pos_mem_iff two_pos).2 ⟨x.1.2.1, h⟩⟩, x.2)
   else
     G (⟨2 * x.1 - 1, unitInterval.two_mul_sub_one_mem_iff.2 ⟨(not_le.1 h).le, x.1.2.2⟩⟩, x.2) := by
   have : ((dihom_to_hom F).trans (dihom_to_hom G)) x = (F.trans G) x := rfl
@@ -590,7 +586,7 @@ def trans {f₀ f₁ f₂ : D(X, Y)} (F : DihomotopyWith f₀ f₁ P) (G : Dihom
 lemma trans_apply {f₀ f₁ f₂ : D(X, Y)} (F : DihomotopyWith f₀ f₁ P) (G : DihomotopyWith f₁ f₂ P)
   (x : I × X) : (F.trans G) x =
   if h : (x.1 : ℝ) ≤ 1/2 then
-    F (⟨2 * x.1, (unitInterval.mul_pos_mem_iff zero_lt_two).2 ⟨x.1.2.1, h⟩⟩, x.2)
+    F (⟨2 * x.1, (unitInterval.mul_pos_mem_iff two_pos).2 ⟨x.1.2.1, h⟩⟩, x.2)
   else
     G (⟨2 * x.1 - 1, unitInterval.two_mul_sub_one_mem_iff.2 ⟨(not_le.1 h).le, x.1.2.2⟩⟩, x.2) :=
 Dihomotopy.trans_apply _ _ _
@@ -681,7 +677,7 @@ def trans (F : DihomotopyRel f₀ f₁ S) (G : DihomotopyRel f₁ f₂ S) : Diho
 lemma trans_apply (F : DihomotopyRel f₀ f₁ S) (G : DihomotopyRel f₁ f₂ S)
   (x : I × X) : (F.trans G) x =
   if h : (x.1 : ℝ) ≤ 1/2 then
-    F (⟨2 * x.1, (unitInterval.mul_pos_mem_iff zero_lt_two).2 ⟨x.1.2.1, h⟩⟩, x.2)
+    F (⟨2 * x.1, (unitInterval.mul_pos_mem_iff two_pos).2 ⟨x.1.2.1, h⟩⟩, x.2)
   else
     G (⟨2 * x.1 - 1, unitInterval.two_mul_sub_one_mem_iff.2 ⟨(not_le.1 h).le, x.1.2.2⟩⟩, x.2) :=
 Dihomotopy.trans_apply _ _ _

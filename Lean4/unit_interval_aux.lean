@@ -8,15 +8,15 @@ lemma zero_le (T : I) : ⟨0, unitInterval.zero_mem⟩ ≤ T := Subtype.coe_le_c
 lemma le_one (T : I) : T ≤ ⟨1, unitInterval.one_mem⟩:= Subtype.coe_le_coe.mp T.2.2
 
 lemma double_pos_of_pos {T : I} (hT₀ : 0 < T) : 0 < (2 * T : ℝ) :=
-  mul_pos zero_lt_two hT₀
+  mul_pos two_pos hT₀
 lemma double_sigma_pos_of_lt_one {T : I} (hT₁ : T < 1) : 0 < (2 * (1 - T) : ℝ) :=
-  mul_pos zero_lt_two (by {simp; exact hT₁})
+  mul_pos two_pos (by {simp; exact hT₁})
 
 lemma double_mem_I {t : I} (ht : ↑t ≤ (2⁻¹ : ℝ)) : 2 * (t : ℝ) ∈ I := by
   constructor
   exact mul_nonneg zero_le_two t.2.1
   calc 2 * (t : ℝ)
-      _ ≤ 2 * 2⁻¹ := (mul_le_mul_left zero_lt_two).mpr ht
+      _ ≤ 2 * 2⁻¹ := (mul_le_mul_left two_pos).mpr ht
       _ = 1 := by norm_num
 
 lemma double_sub_one_mem_I {t : I} (ht : (2⁻¹ : ℝ) ≤ ↑t) : 2 * (t : ℝ) - 1 ∈ I := by

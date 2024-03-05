@@ -26,9 +26,6 @@ variable {X : Type u} [DirectedSpace X] {x y z : X}
 structure Dipath (x y : X) extends Path x y :=
   (dipath_toPath : IsDipath toPath)
 
--- TODO: Fix or remove? PathConnected.lean from Mathlib4 does not have the first Coercion
-instance : CoeFun (Dipath x y) (fun _ => I → X) := ⟨fun γ => γ.toFun⟩
--- instance : Coe (Dipath x y) (C(I, X)) := ⟨fun γ => γ.toContinuousMap⟩
 instance : Coe (Dipath x y) (Path x y) := ⟨fun γ => γ.toPath⟩
 
 namespace Dipath
@@ -39,10 +36,6 @@ lemma directed (γ : Dipath x y) : DirectedMap.Directed γ.toContinuousMap :=
 def toDirectedMap (γ : Dipath x y) : D(I, X) where
   directed_toFun := Dipath.directed γ
   toFun := γ.toFun
-
--- TODO: Remove or add depending on necessary somewhere else.
-/-- To bypass the conversion to continuous_map -/
--- def to_fun : (Dipath x y) → I → X := fun f => f.toFun
 
 instance Dipath.instFunLike : FunLike (Dipath x y) I X where
   coe := fun γ => γ.toFun
@@ -56,9 +49,6 @@ instance Dipath.directedMapClass : DirectedMapClass (Dipath x y) I X where
   map_directed := fun γ => directed γ
 
 end Dipath
-
--- TODO: Fix: Problem with out-params
--- instance : Coe (Dipath x y) (D(I, X)) := ⟨fun γ => γ.toDirectedMap⟩
 
 @[ext]
 protected lemma Dipath.ext : ∀ {γ₁ γ₂ : Dipath x y}, (γ₁ : I → X) = γ₂ → γ₁ = γ₂ := by
@@ -107,10 +97,6 @@ lemma coe_toContinuousMap : ⇑γ.toContinuousMap = γ := rfl
 @[simp]
 lemma coe_toDirectedMap : ⇑γ.toDirectedMap = γ := rfl
 
--- TODO: Is this necessary? (see PathConnected.lean) Is this different from coe_mk above?
--- @[simp]
--- theorem coe_mk : ⇑(γ : C(I, X)) = γ := rfl
-
 /-- Any function `φ : Π (a : α), dipath (x a) (y a)` can be seen as a function `α × I → X`. -/
 instance hasUncurryDipath {X α : Type*} [DirectedSpace X] {x y : α → X} :
   Function.HasUncurry (∀ a : α, Dipath (x a) (y a)) (α × I) X :=
@@ -155,12 +141,11 @@ lemma image_extend_eq_image (γ : Dipath x y) (a b : I) : γ.extend '' Icc ↑a 
 
 /-! ### Reflexive dipaths -/
 
--- TODO: Why is simps! suggested instead of simps?
 /-- The constant dipath from a point to itself -/
-@[refl, simps!] def refl (x : X) : Dipath x x := {
-  Path.refl x with
+@[refl, simps!]
+def refl (x : X) : Dipath x x where
+  toPath := Path.refl x
   dipath_toPath := isDipath_constant x
-}
 
 @[simp] lemma refl_range {a : X} : range (Dipath.refl a) = {a} := Path.refl_range
 
@@ -180,7 +165,7 @@ lemma image_extend_eq_image (γ : Dipath x y) (a b : I) : γ.extend '' Icc ↑a 
 
 lemma trans_apply (γ : Dipath x y) (γ' : Dipath y z) (t : I) : (γ.trans γ') t =
   if h : (t : ℝ) ≤ 1/2 then
-    γ ⟨2 * t, (unitInterval.mul_pos_mem_iff zero_lt_two).2 ⟨t.2.1, h⟩⟩
+    γ ⟨2 * t, (unitInterval.mul_pos_mem_iff two_pos).2 ⟨t.2.1, h⟩⟩
   else
     γ' ⟨2 * t - 1, unitInterval.two_mul_sub_one_mem_iff.2 ⟨(not_le.1 h).le, t.2.2⟩⟩ :=
 Path.trans_apply (γ.toPath) (γ'.toPath) t
@@ -188,9 +173,8 @@ Path.trans_apply (γ.toPath) (γ'.toPath) t
 lemma trans_range (γ : Dipath x y) (γ' : Dipath y z) : range (γ.trans γ') = range γ ∪ range γ' :=
   Path.trans_range γ.toPath γ'.toPath
 
--- TODO: Half_I would be better here, but that does not work further on (in split_properties/path_cover)
 lemma trans_eval_at_half (γ : Dipath x y) (γ' : Dipath y z) :
-    (γ.trans γ') (Fraction zero_lt_two one_le_two) = y := by
+    (γ.trans γ') (Fraction.ofPos two_pos) = y := by
   rw [Dipath.trans_apply]
   simp
 
