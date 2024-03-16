@@ -29,10 +29,10 @@ lemma frac_special {a b c : ℝ} (hbc : b ≠ c) (hc : c + 1 ≠ 0) :
   · exact (div_add_div_same _ _ _).symm
   · exact sub_ne_zero_of_ne hbc.symm
 
-/-- TODO: Find right name
-  For any `i n : ℕ` with `i > 0` and `i ≤ (n + 1) * i`, we have that `1 / (n + 1) = i / (n + 1) * i`.
+/--
+  For any `i n : ℕ` with `i > 0` and `i ≤ (n + 1) * i`, we have that `1 / (n + 1) = i / ((n + 1) * i)`.
 -/
-lemma eq_inv₁ {i n : ℕ} (i_pos : 0 < i) (hi_n : (i - 1).succ ≤ ((n+1) * i - 1).succ) :
+lemma cancel_common_factor {i n : ℕ} (i_pos : 0 < i) (hi_n : (i - 1).succ ≤ ((n+1) * i - 1).succ) :
     Fraction.ofPos (Nat.succ_pos n) = Fraction (Nat.succ_pos _) hi_n := by
   simp
   have : (↑(i - 1) : ℝ) + 1 = i := by
