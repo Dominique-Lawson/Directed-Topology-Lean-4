@@ -183,18 +183,9 @@ lemma hcomp_first_case (F : Dihomotopy p₀ q₀) (G : Dihomotopy p₁ q₁) {a�
   obtain ⟨s₁, t₁⟩ := a₁
 
   set Γ := (dihom_to_hom F).hcomp (dihom_to_hom G)
-
-  set γ₁ : Dipath s₀ s₁ :=
-    {
-      toPath := γ.map continuous_fst
-      dipath_toPath := γ_dipath.1
-    }
-
-  set γ₂ : Dipath t₀ t₁ :=
-    {
-      toPath := γ.map continuous_snd
-      dipath_toPath := γ_dipath.2
-    }
+  set γ_as_dipath := Dipath.of_isDipath γ_dipath
+  set γ₁ := γ_as_dipath.of_product_fst
+  set γ₂ := γ_as_dipath.of_product_snd
 
   set p := Dipath.dipath_product γ₁ (Dipath.stretch_up γ₂ ht₁)
   set p' := p.map (F.toDirectedMap)
@@ -221,18 +212,9 @@ lemma hcomp_second_case (F : Dihomotopy p₀ q₀) (G : Dihomotopy p₁ q₁) {a
   obtain ⟨s₁, t₁⟩ := a₁
 
   set Γ := (dihom_to_hom F).hcomp (dihom_to_hom G)
-
-  set γ₁ : Dipath s₀ s₁ :=
-    {
-      toPath := γ.map continuous_fst
-      dipath_toPath := γ_dipath.1
-    }
-
-  set γ₂ : Dipath t₀ t₁ :=
-    {
-      toPath := γ.map continuous_snd
-      dipath_toPath := γ_dipath.2
-    }
+  set γ_as_dipath := Dipath.of_isDipath γ_dipath
+  set γ₁ := γ_as_dipath.of_product_fst
+  set γ₂ := γ_as_dipath.of_product_snd
 
   set p := Dipath.dipath_product γ₁ (Dipath.stretch_down γ₂ ht₀)
   set p' := p.map G.toDirectedMap
@@ -267,22 +249,9 @@ def hcomp (F : Dihomotopy p₀ q₀) (G : Dihomotopy p₁ q₁) :
   set Γ := Fₕ.hcomp Gₕ
   have : DirectedMap.Directed Γ.toContinuousMap := by
     rintro ⟨s₀, t₀⟩ ⟨s₁, t₁⟩ γ γ_dipath
-
-    set γ_as_dipath : Dipath (s₀, t₀) (s₁, t₁) :=
-      {
-        toPath := γ,
-        dipath_toPath := γ_dipath
-      }
-    set γ₁ : Dipath s₀ s₁ :=
-      {
-        toPath := γ.map continuous_fst
-        dipath_toPath := γ_dipath.1
-      }
-    set γ₂ : Dipath t₀ t₁ :=
-      {
-        toPath := γ.map continuous_snd
-        dipath_toPath := γ_dipath.2
-      }
+    set γ_as_dipath := Dipath.of_isDipath γ_dipath
+    set γ₁ := γ_as_dipath.of_product_fst
+    set γ₂ := γ_as_dipath.of_product_snd
 
     by_cases ht₁ : (↑t₁ : ℝ) ≤ 2⁻¹
     case pos => exact hcomp_first_case F G γ_dipath ht₁

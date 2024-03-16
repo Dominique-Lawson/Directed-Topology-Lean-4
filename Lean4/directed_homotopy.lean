@@ -226,19 +226,9 @@ lemma trans_first_case {a₀ a₁ : I × X} {γ : Path a₀ a₁} (γ_dipath : I
   obtain ⟨t₁, x₁⟩ := a₁
 
   set Γ := (dihom_to_hom F).trans (dihom_to_hom G) with Γ_def
-
-  set γ₁ : Dipath t₀ t₁ :=
-    {
-      toPath := γ.map continuous_fst
-      dipath_toPath := γ_dipath.1
-    }
-
-  set γ₂ : Dipath x₀ x₁ :=
-    {
-      toPath := γ.map continuous_snd
-      dipath_toPath := γ_dipath.2
-    }
-
+  set γ_as_dipath := Dipath.of_isDipath γ_dipath
+  set γ₁ := γ_as_dipath.of_product_fst
+  set γ₂ := γ_as_dipath.of_product_snd
 
   set p := Dipath.dipath_product (Dipath.stretch_up γ₁ ht₁) γ₂ with p_def
   set p' := p.map (↑F : D(I × X, Y)) with p'_def
@@ -262,18 +252,9 @@ lemma trans_second_case {a₀ a₁ : I × X} {γ : Path a₀ a₁} (γ_dipath : 
   obtain ⟨t₁, x₁⟩ := a₁
 
   set Γ := (dihom_to_hom F).trans (dihom_to_hom G) with Γ_def
-
-  set γ₁ : Dipath t₀ t₁ :=
-    {
-      toPath := γ.map continuous_fst
-      dipath_toPath := γ_dipath.1
-    }
-
-  set γ₂ : Dipath x₀ x₁ :=
-    {
-      toPath := γ.map continuous_snd
-      dipath_toPath := γ_dipath.2
-    } with γ₂_def
+  set γ_as_dipath := Dipath.of_isDipath γ_dipath
+  set γ₁ := γ_as_dipath.of_product_fst
+  set γ₂ := γ_as_dipath.of_product_snd
 
   set p := Dipath.dipath_product (Dipath.stretch_down γ₁ ht₀) γ₂ with p_def
   set p' := p.map (↑G : D(I × X, Y)) with p'_def
@@ -309,25 +290,10 @@ def trans {f₂ : D(X, Y)} (F : Dihomotopy f₀ f₁) (G: Dihomotopy f₁ f₂) 
   set Γ := Fₕ.trans Gₕ
   apply hom_to_dihom Γ
 
-  rintro ⟨t₀, x₀⟩ ⟨t₁, x₁⟩  γ γ_dipath
-
-  set γ_as_dipath : Dipath (t₀, x₀) (t₁, x₁) :=
-    {
-      toPath := γ,
-      dipath_toPath := γ_dipath
-    }
-
-  set γ₁ : Dipath t₀ t₁ :=
-    {
-      toPath := γ.map continuous_fst,
-      dipath_toPath := γ_dipath.1
-    }
-
-  set γ₂ : Dipath x₀ x₁ :=
-    {
-      toPath := γ.map continuous_snd,
-      dipath_toPath := γ_dipath.2
-    }
+  rintro ⟨t₀, x₀⟩ ⟨t₁, x₁⟩ γ γ_dipath
+  set γ_as_dipath := Dipath.of_isDipath γ_dipath
+  set γ₁ := γ_as_dipath.of_product_fst
+  set γ₂ := γ_as_dipath.of_product_snd
 
   by_cases ht₁ : (↑t₁ : ℝ) ≤ 2⁻¹
   ·  -- The entire path falls in the domain of F

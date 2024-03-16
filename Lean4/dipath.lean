@@ -285,4 +285,16 @@ def dipath_product (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath y₀ y₁) : Dipat
       { convert γ₁.dipath_toPath }
       { convert γ₂.dipath_toPath }
 
+/-- Given a directed path in a product space, we can project it to its first coordinate to
+obtain a directed path -/
+def of_product_fst (γ : Dipath (x₀, y₀) (x₁, y₁)) : Dipath x₀ x₁ where
+  toPath := γ.toPath.map continuous_fst
+  dipath_toPath := γ.dipath_toPath.1
+
+/-- Given a directed path in a product space, we can project it to its second coordinate to
+obtain a directed path -/
+def of_product_snd (γ : Dipath (x₀, y₀) (x₁, y₁)) : Dipath y₀ y₁ where
+  toPath := γ.toPath.map continuous_snd
+  dipath_toPath := γ.dipath_toPath.2
+
 end Dipath
