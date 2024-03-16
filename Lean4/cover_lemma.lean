@@ -9,7 +9,6 @@ import Lean4.fraction
 
 universe u
 
--- open auxiliary
 open scoped unitInterval
 
 /-! ### Auxiliary lemmas -/
