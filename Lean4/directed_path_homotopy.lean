@@ -296,12 +296,12 @@ def hcomp (F : Dihomotopy p₀ q₀) (G : Dihomotopy p₁ q₁) :
     obtain ⟨hT₀, ⟨hT₁, hT_half⟩⟩ := hT
 
     /- Split γ into two parts (one with image in I × [0, 2⁻¹], the other with image in I × [2⁻¹, 1])-/
-    set a₁ := SplitDipath.FirstPartDipath γ_as_dipath T
-    set a₂ := SplitDipath.SecondPartDipath γ_as_dipath T
+    set a₁ := SplitDipath.FirstPart γ_as_dipath T
+    set a₂ := SplitDipath.SecondPart γ_as_dipath T
 
     /- Create two new paths, where the first coordinate is stretched and the second coordinate remains the same -/
-    set p₁ := SplitDipath.FirstPartDipath γ₁ T
-    set p₂ := SplitDipath.SecondPartDipath γ₁ T
+    set p₁ := SplitDipath.FirstPart γ₁ T
+    set p₂ := SplitDipath.SecondPart γ₁ T
 
     set p₁' := DirectedMap.Dihomotopy.FirstPartStretch γ₂ hT_half (le_of_lt ht₀)
     set p₂' := DirectedMap.Dihomotopy.SecondPartStretch γ₂ hT_half (le_of_lt ht₁)

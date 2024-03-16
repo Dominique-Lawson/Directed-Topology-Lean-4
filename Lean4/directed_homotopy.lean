@@ -167,13 +167,13 @@ variable {t₀ t₁ : I} (γ : Dipath t₀ t₁) {T : I}
 variable (hT : γ T = half_I)
 
 def FirstPartStretch (ht₀ : (t₀ : ℝ) ≤ 2⁻¹) : Dipath (⟨2 * (t₀.1 : ℝ), double_mem_I ht₀⟩ : I) (1 : I) where
-  toFun := Dipath.stretch_up (FirstPartDipath γ T) (by { convert le_refl (2⁻¹ : ℝ); simp [hT] })
+  toFun := Dipath.stretch_up (FirstPart γ T) (by { convert le_refl (2⁻¹ : ℝ); simp [hT] })
   source' := by simp
   target' := by simp [hT]
   dipath_toPath := Dipath.isDipath_stretch_up (_) (by { convert le_refl (2⁻¹ : ℝ); simp [hT] })
 
 def SecondPartStretch (ht₁ : 2⁻¹ ≤ (t₁ : ℝ)) : Dipath (0 : I) ⟨2 * (t₁.1 : ℝ) - 1, double_sub_one_mem_I ht₁⟩ where
-  toFun := Dipath.stretch_down (SecondPartDipath γ T) (by { convert le_refl (2⁻¹ : ℝ); simp [hT] })
+  toFun := Dipath.stretch_down (SecondPart γ T) (by { convert le_refl (2⁻¹ : ℝ); simp [hT] })
   source' := by simp [hT]
   target' := by simp
   dipath_toPath := Dipath.isDipath_stretch_down (_) (by { convert le_refl (2⁻¹ : ℝ); simp [hT] })
@@ -345,15 +345,15 @@ def trans {f₂ : D(X, Y)} (F : Dihomotopy f₀ f₁) (G: Dihomotopy f₁ f₂) 
     obtain ⟨hT₀, ⟨hT₁, hT_half⟩⟩ := hT
 
     /- Split γ into two parts (one with image in [0, 2⁻¹] × X, the other with image in [2⁻¹, 1] × X)-/
-    set a₁ := SplitDipath.FirstPartDipath γ_as_dipath T
-    set a₂ := SplitDipath.SecondPartDipath γ_as_dipath T
+    set a₁ := SplitDipath.FirstPart γ_as_dipath T
+    set a₂ := SplitDipath.SecondPart γ_as_dipath T
 
     /- Create two new paths, where the first coordinate is stretched and the second coordinate remains the same -/
     set p₁ := FirstPartStretch γ₁ hT_half (le_of_lt ht₀)
     set p₂ := SecondPartStretch γ₁ hT_half (le_of_lt ht₁)
 
-    set p₁' := SplitDipath.FirstPartDipath γ₂ T
-    set p₂' := SplitDipath.SecondPartDipath γ₂ T
+    set p₁' := SplitDipath.FirstPart γ₂ T
+    set p₂' := SplitDipath.SecondPart γ₂ T
 
     set q₁ := (Dipath.dipath_product p₁ p₁').map F.toDirectedMap
     set q₂ := (Dipath.dipath_product p₂ p₂').map G.toDirectedMap

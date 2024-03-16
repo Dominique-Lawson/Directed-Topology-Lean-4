@@ -310,7 +310,7 @@ lemma functorOnHomOfCovered_cast_right {x y y' : X} {γ : Dipath x y} (hγ : cov
 
 lemma functorOnHomOfCovered_split_comp {x y : X} {γ : Dipath x y} (hγ : covered hX γ) {T : I} (hT₀ : 0 < T) (hT₁ : T < 1) :
     F₀ hγ = (F₀ (covered_split_path hT₀ hT₁ hγ).1) ≫ (F₀ (covered_split_path hT₀ hT₁ hγ).2) := by
-  have : covered hX ((SplitDipath.FirstPartDipath γ T).trans (SplitDipath.SecondPartDipath γ T)) := by
+  have : covered hX ((SplitDipath.FirstPart γ T).trans (SplitDipath.SecondPart γ T)) := by
     rw [SplitDipath.first_trans_second_reparam_eq_self γ hT₀ hT₁] at hγ
     exact (covered_reparam_iff _ hX _ _ _).mpr hγ
 
@@ -625,14 +625,14 @@ lemma functorOnHomAux_trans {x y z : X} (γ₁ : Dipath x y) (γ₂ : Dipath y z
   rw [functorOnHomOfCoveredPartwise_trans]
 
 lemma functorOnHomAux_split_of_covered_partwise {x y : X} {γ : Dipath x y} {n : ℕ} (hγ : covered_partwise hX γ n.succ) :
-    F_map_aux γ =  F_map_aux (SplitDipath.FirstPartDipath γ (Fraction (Nat.succ_pos _) (Nat.succ_le_succ (Nat.zero_le n.succ))))
-      ≫ F_map_aux (SplitDipath.SecondPartDipath γ (Fraction (Nat.succ_pos _) (Nat.succ_le_succ (Nat.zero_le n.succ)))) := by
+    F_map_aux γ =  F_map_aux (SplitDipath.FirstPart γ (Fraction (Nat.succ_pos _) (Nat.succ_le_succ (Nat.zero_le n.succ))))
+      ≫ F_map_aux (SplitDipath.SecondPart γ (Fraction (Nat.succ_pos _) (Nat.succ_le_succ (Nat.zero_le n.succ)))) := by
   -- Rewrite L.H.S.
   rw [functorOnHomAux_apply hX _ _ h_comm hγ]
   rw [functorOnHomOfCoveredPartwise_apply_succ hX h_comm hγ]
 
   --Rewrite R.H.S.
-  have : covered_partwise hX (SplitDipath.FirstPartDipath γ _) 0 := hγ.left
+  have : covered_partwise hX (SplitDipath.FirstPart γ _) 0 := hγ.left
   rw [functorOnHomAux_apply hX _ _ h_comm this]
   rw [functorOnHomOfCoveredPartwise_apply_0]
   rw [functorOnHomAux_apply hX _ _ h_comm hγ.right]
@@ -700,11 +700,11 @@ lemma functorOnHomAux_of_homotopic_dimaps {m : ℕ} :
     -- Split at 1/(m.succ + 1)
     let T := Fraction (Nat.succ_pos m.succ) (Nat.succ_le_succ (Nat.zero_le m.succ))
 
-    let f₁ := (SplitDipath.FirstPartDipath (Dipath.of_directedMap f) T)
-    let f₂ := (SplitDipath.SecondPartDipath (Dipath.of_directedMap f) T)
+    let f₁ := (SplitDipath.FirstPart (Dipath.of_directedMap f) T)
+    let f₂ := (SplitDipath.SecondPart (Dipath.of_directedMap f) T)
 
-    let g₁ := (SplitDipath.FirstPartDipath (Dipath.of_directedMap g) T)
-    let g₂ := (SplitDipath.SecondPartDipath (Dipath.of_directedMap g) T)
+    let g₁ := (SplitDipath.FirstPart (Dipath.of_directedMap g) T)
+    let g₂ := (SplitDipath.SecondPart (Dipath.of_directedMap g) T)
 
     have h₁ : F_map_aux f₂ ≫ F_map_aux (H.eval_at_right 1) = F_map_aux (H.eval_at_right T) ≫ F_map_aux g₂ := by
       have := ih (DirectedMap.Dihomotopy.coveredPartwise_second_hpart hcov)
