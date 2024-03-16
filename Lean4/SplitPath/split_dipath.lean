@@ -1,5 +1,11 @@
 import Lean4.SplitPath.split_path
 
+/- This file contains definitions for splitting a directed path `γ : Dipath x y` at some point
+  `T : I` yielding two different directed paths:
+  * Its first part, from `x` to `γ T`, given by evaluating `γ` on `[0, T]`.
+  * Its second part, from `γ T` to `y`, given by evaluating `γ` on `[T, 1]`.
+-/
+
 noncomputable section
 universe u
 variable {X : Type u} [DirectedSpace X] {x₀ x₁ : X}

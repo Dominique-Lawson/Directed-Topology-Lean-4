@@ -1,5 +1,11 @@
 import Mathlib.Topology.Connected.PathConnected
 
+/-
+  This file contains lemmas about
+  * elements being contained in the unit interval.
+  * relations between elements in the unit interval.
+-/
+
 open scoped unitInterval
 
 namespace unitIAux

@@ -3,8 +3,7 @@ import Lean4.fraction
 import Lean4.fraction_equalities
 
 /-
-  This file contains lemmas about splitting a (di)path into two parts,
-  and how their concatenation relates to the original (di)path
+  This file contains many lemmas about relations that the parts of a split path satisfy.
 -/
 
 open scoped unitInterval

@@ -1,6 +1,10 @@
 import Mathlib.Topology.Connected.PathConnected
 import Mathlib.Topology.Homotopy.Basic
 
+/-
+  This file contains lemmas about monotone paths in a preordered topological space
+-/
+
 open scoped unitInterval
 
 lemma monotone_path_bounded_left {α : Type*} {x y : α} [TopologicalSpace α] [Preorder α]

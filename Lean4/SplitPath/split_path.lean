@@ -1,9 +1,10 @@
 import Lean4.interpolate
 import Lean4.unit_interval_aux
 
-/-
-  This file contains lemmas about splitting a (di)path into two parts,
-  and how their concatenation relates to the original (di)path
+/- This file contains definitions for splitting a path `γ : Path x y` at some point `T : I`
+  yielding two different paths:
+  * Its first part, from `x` to `γ T`, given by evaluating `γ` on `[0, T]`.
+  * Its second part, from `γ T` to `y`, given by evaluating `γ` on `[T, 1]`.
 -/
 
 open scoped unitInterval

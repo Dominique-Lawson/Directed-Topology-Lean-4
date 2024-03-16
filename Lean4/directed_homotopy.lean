@@ -144,7 +144,7 @@ def eval_at_right {X : Type*} {Y : Type*} [DirectedSpace X] [DirectedSpace Y] {f
 end
 
 /--
-Given a directed map `f`, we can define a `dihomotopy f f` by `F (t, x) = f x`
+Given a directed map `f`, we can define a `Dihomotopy f f` by `F (t, x) = f x`
 -/
 lemma directed_refl (f : D(X, Y)) : Directed (↑(ContinuousMap.Homotopy.refl (↑f : C(X, Y))) : C(I × X, Y)) :=
   fun _ _ γ γ_dipath => (f.directed_toFun (γ.map continuous_snd) (directed_snd.directed_toFun γ γ_dipath))
@@ -404,7 +404,7 @@ lemma trans_apply {f₀ f₁ f₂ : D(X, Y)} (F : Dihomotopy f₀ f₁) (G : Dih
   exact ContinuousMap.Homotopy.trans_apply _ _ x
 
 /--
-Casting a `dihomotopy f₀ f₁` to a `dihomotopy g₀ g₁` where `f₀ = g₀` and `f₁ = g₁`.
+Casting a `Dihomotopy f₀ f₁` to a `Dihomotopy g₀ g₁` where `f₀ = g₀` and `f₁ = g₁`.
 -/
 @[simps]
 def cast {f₀ f₁ g₀ g₁ : D(X, Y)} (F : Dihomotopy f₀ f₁) (h₀ : f₀ = g₀) (h₁ : f₁ = g₁) :
@@ -415,8 +415,8 @@ def cast {f₀ f₁ g₀ g₁ : D(X, Y)} (F : Dihomotopy f₀ f₁) (h₀ : f₀
     map_one_left := by simp [←h₁]
 
 /--
-If we have a `dihomotopy f₀ f₁` and a `dihomotopy g₀ g₁`, then we can compose them and get a
-`dihomotopy (g₀.comp f₀) (g₁.comp f₁)`.
+If we have a `Dihomotopy f₀ f₁` and a `Dihomotopy g₀ g₁`, then we can compose them and get a
+`Dihomotopy (g₀.comp f₀) (g₁.comp f₁)`.
 -/
 @[simps!]
 def hcomp {f₀ f₁ : D(X, Y)} {g₀ g₁ : D(Y, Z)} (F : Dihomotopy f₀ f₁) (G : Dihomotopy g₀ g₁) :

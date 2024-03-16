@@ -1,7 +1,5 @@
 import Lean4.fraction
 
--- TODO: Refactor this in some way?
-
 namespace FractionEqualities
 
 lemma one_sub_inverse_of_add_one {n : ℝ} (hn : n + 1 ≠ 0) :

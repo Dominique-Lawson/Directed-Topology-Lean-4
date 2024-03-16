@@ -3,7 +3,7 @@ import Lean4.directed_space
 /-
   # Definition of directed maps
   This file defines the directed map between two directed spaces `X` and `Y` :
-  it is a continuous map from `X` to `Y` that is also `directed`, i.e. it maps any dipath in `X` to a dipath in `Y`.
+  it is a continuous map from `X` to `Y` that is also `Directed`, i.e. it maps any dipath in `X` to a dipath in `Y`.
   We give the definitions of:
   * Constant maps
   * Identities
@@ -12,7 +12,7 @@ import Lean4.directed_space
 
 namespace DirectedMap
 
-/-- A continuous map between two directed spaces is `directed` if it maps dipaths to dipaths. -/
+/-- A continuous map between two directed spaces is `Directed` if it maps dipaths to dipaths. -/
 def Directed {α β : Type*} [DirectedSpace α] [DirectedSpace β] (f : C(α, β)) : Prop :=
   ∀ ⦃x y : α⦄ (γ : Path x y), IsDipath γ → IsDipath (γ.map f.continuous_toFun)
 

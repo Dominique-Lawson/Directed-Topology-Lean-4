@@ -95,7 +95,7 @@ lemma coe_toContinuousMap : ⇑γ.toContinuousMap = γ := rfl
 @[simp]
 lemma coe_toDirectedMap : ⇑γ.toDirectedMap = γ := rfl
 
-/-- Any function `φ : Π (a : α), dipath (x a) (y a)` can be seen as a function `α × I → X`. -/
+/-- Any function `φ : Π (a : α), Dipath (x a) (y a)` can be seen as a function `α × I → X`. -/
 instance hasUncurryDipath {X α : Type*} [DirectedSpace X] {x y : α → X} :
   Function.HasUncurry (∀ a : α, Dipath (x a) (y a)) (α × I) X :=
 ⟨fun φ p => φ p.1 p.2⟩

@@ -113,29 +113,35 @@ section prod
 variable {α β γ δ : Type*}  [DirectedSpace α] [DirectedSpace β] [DirectedSpace γ] [DirectedSpace δ]
 
 /--
-  Two dimaps `f : α → β` and `g : α → γ` can be turned into a dimap `α → β × γ` by mapping
-  `a : α` to `(f a, g a)`.
+  Two directed maps `f : α → β` and `g : α → γ` can be turned into a directed map `α → β × γ` by
+  mapping `a : α` to `(f a, g a)`.
 -/
 protected def DirectedMap.prod_map_mk (f : D(α, β)) (g : D(α, γ)) : D(α, β × γ) where
   toFun := fun x => (f x, g x)
   directed_toFun := fun x y γ hγ => ⟨f.directed_toFun γ hγ, g.directed_toFun γ hγ⟩
 
 /--
-  Two dimaps `f : α → γ` and `g : β → δ` can be turned into a dimap `α × β → β × γ` by mapping
-  `(a, b) : α × β` to `(f a, g b)`.
+  Two directed maps `f : α → γ` and `g : β → δ` can be turned into a directed map `α × β → β × γ` by
+  mapping `(a, b) : α × β` to `(f a, g b)`.
 -/
 protected def DirectedMap.prod_map_mk' (f : D(α, γ)) (g : D(β, δ)) : D(α × β, γ × δ) where
   toFun := fun x => (f x.1, g x.2)
   directed_toFun := fun x y γ ⟨hγ₁, hγ₂⟩ => ⟨f.directed_toFun _ hγ₁, g.directed_toFun _ hγ₂⟩
 
-/- For every `t : α`, we can convert a directed map `F : α × β → γ` to a directed map `β → γ` by sending `b` to `F(t, b)` -/
+/--
+  For every `t : α`, we can convert a directed map `F : α × β → γ` to a directed map `β → γ` by
+  sending `b` to `F(t, b)`
+-/
 def DirectedMap.prod_const_fst (F : D(α × β, γ)) (a : α) : D(β, γ) :=
   F.comp (DirectedMap.prod_map_mk (DirectedMap.const β a) (DirectedMap.id β))
 
 @[simp] lemma DirectedMap.prod_const_fst_apply (F : D(α × β, γ)) (a : α) (b : β) :
   DirectedMap.prod_const_fst F a b = F (a, b) := rfl
 
-/- For every `t : β`, we can convert a directed map `F : α × β → γ` to a directed map `α → γ` by sending `a` to `F(a, t)` -/
+/--
+  For every `t : β`, we can convert a directed map `F : α × β → γ` to a directed map `α → γ` by
+  sending `a` to `F(a, t)`
+-/
 def DirectedMap.prod_const_snd (F : D(α × β, γ)) (t : β) : D(α, γ) :=
   F.comp (DirectedMap.prod_map_mk (DirectedMap.id α) (DirectedMap.const α t))
 

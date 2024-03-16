@@ -79,7 +79,7 @@ instance coe_dihom_to_hom : Coe (Dihomotopy p₀ p₁) (Path.Homotopy p₀.toPat
   ⟨fun F => F.dihom_to_hom⟩
 
 /--
-Evaluating a dipath homotopy at an intermediate point, giving us a `dipath`.
+Evaluating a dipath homotopy at an intermediate point, giving us a `Dipath`.
 -/
 def eval (F : Dihomotopy p₀ p₁) (t : I) : Dipath x y where
   toFun := F.toDihomotopy.curry t

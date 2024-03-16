@@ -18,7 +18,7 @@ def dTopCat : Type (u+1) := Bundled DirectedSpace
 
 namespace dTopCat
 
--- For some reason, @DirectedMap.toFun does not work as the first argument
+-- TODO: For some reason, @DirectedMap.toFun does not work as the first argument
 instance bundledHom : BundledHom @DirectedMap :=
  ⟨fun _ _ f => f.toFun, @DirectedMap.id, @DirectedMap.comp, @DirectedMap.coe_injective,
   fun _ => rfl, fun _ _ _ _ _ => rfl⟩
