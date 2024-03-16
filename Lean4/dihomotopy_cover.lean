@@ -377,27 +377,24 @@ end DirectedMap
 namespace Dipath
 namespace Dihomotopy
 
-variable {X : dTopCat} {X₀ X₁ : Set X}
+variable {X : dTopCat} {X₀ X₁ : Set X} {x y : X} {γ₁ γ₂ : Dipath x y}
 
-lemma range_left_subset {x₀ x₁ : X} {γ₁ γ₂ : Dipath x₀ x₁} (F : Dihomotopy γ₁ γ₂) :
-    range γ₁ ⊆ range F :=
+lemma range_left_subset (F : Dihomotopy γ₁ γ₂) : range γ₁ ⊆ range F :=
   fun _ ⟨t, ht⟩ => ⟨(0 , t), ht ▸ F.map_zero_left t⟩
 
-lemma range_right_subset {x₀ x₁ : X} {γ₁ γ₂ : Dipath x₀ x₁} (F : Dihomotopy γ₁ γ₂) :
-    range γ₂ ⊆ range F :=
+lemma range_right_subset (F : Dihomotopy γ₁ γ₂) : range γ₂ ⊆ range F :=
   fun _ ⟨t, ht⟩ => ⟨(1 , t), ht ▸ F.map_one_left t⟩
 
 /--
   A dihomotopy of directed paths is covered if its image lies entirely in X₀ or in X₁.
 -/
-def covered {x₀ x₁ : X} {γ₁ γ₂ : Dipath x₀ x₁} (_ : X₀ ∪ X₁ = univ) (F : Dihomotopy γ₁ γ₂) : Prop :=
-  range F ⊆ X₀ ∨ range F ⊆ X₁
+def covered (_ : X₀ ∪ X₁ = univ) (F : Dihomotopy γ₁ γ₂) : Prop := range F ⊆ X₀ ∨ range F ⊆ X₁
 
 /--
 If `F : γ₁ ∼ γ₂` is a dihomotopy of directed paths, and `F` is covered, then `γ₁` is covered.
 -/
-lemma covered_left_of_covered {x₀ x₁ : X} {γ₁ γ₂ : Dipath x₀ x₁} {F : Dihomotopy γ₁ γ₂}
-    {hX : X₀ ∪ X₁ = univ} (hF : covered hX F) : Dipath.covered hX γ₁ :=
+lemma covered_left_of_covered {F : Dihomotopy γ₁ γ₂} {hX : X₀ ∪ X₁ = univ} (hF : covered hX F) :
+    Dipath.covered hX γ₁ :=
   Or.elim hF
     (fun hF => Or.inl (subset_trans (range_left_subset F) hF))
     (fun hF => Or.inr (subset_trans (range_left_subset F) hF))
@@ -405,8 +402,8 @@ lemma covered_left_of_covered {x₀ x₁ : X} {γ₁ γ₂ : Dipath x₀ x₁} {
 /--
 If `F : γ₁ ∼ γ₂` is a dihomotopy of directed paths, and `F` is covered, then `γ₂` is covered.
 -/
-lemma covered_right_of_covered {x₀ x₁ : X} {γ₁ γ₂ : Dipath x₀ x₁} {F : Dihomotopy γ₁ γ₂}
-    {hX : X₀ ∪ X₁ = univ} (hF : covered hX F) : Dipath.covered hX γ₂ :=
+lemma covered_right_of_covered {F : Dihomotopy γ₁ γ₂} {hX : X₀ ∪ X₁ = univ} (hF : covered hX F) :
+    Dipath.covered hX γ₂ :=
   Or.elim hF
     (fun hF => Or.inl (subset_trans (range_right_subset F) hF))
     (fun hF => Or.inr (subset_trans (range_right_subset F) hF))
@@ -414,15 +411,15 @@ lemma covered_right_of_covered {x₀ x₁ : X} {γ₁ γ₂ : Dipath x₀ x₁} 
 /--
   Two paths are `m × n`-dihomotopic if there is a dihomotopy between them that can be covered by `m × n` rectangles.
 -/
-def dihomotopicCovered {x₀ x₁ : X} (hX : X₀ ∪ X₁ = univ) (γ₁ γ₂ : Dipath x₀ x₁) (n m : ℕ) : Prop :=
+def dihomotopicCovered (hX : X₀ ∪ X₁ = univ) (γ₁ γ₂ : Dipath x y) (n m : ℕ) : Prop :=
   ∃ (F : Dihomotopy γ₁ γ₂), DirectedMap.Dihomotopy.coveredPartwise hX F.toDihomotopy n m
 
 /--
   If `γ₁` and `γ₂` are two paths connected by a path-dihomotopy `F` that is covered by `m × (n + 1)` rectangles,
   then `γ₁` and `F.eval (1/(n+2))` are `m × 0`-dihomotopic and `F.eval (1/(n+2))` and `γ₂` are `m × n`-dihomotopic.
 -/
-lemma dihomotopicCovered_split {x₀ x₁ : X} {γ₁ γ₂ : Dipath x₀ x₁} {F : Dihomotopy γ₁ γ₂}
-  (hX : X₀ ∪ X₁ = univ) {n m : ℕ} (hF : DirectedMap.Dihomotopy.coveredPartwise hX F.toDihomotopy n.succ m) :
+lemma dihomotopicCovered_split {F : Dihomotopy γ₁ γ₂} (hX : X₀ ∪ X₁ = univ) {n m : ℕ}
+  (hF : DirectedMap.Dihomotopy.coveredPartwise hX F.toDihomotopy n.succ m) :
     dihomotopicCovered hX γ₁ (F.eval (Fraction.ofPos (Nat.succ_pos n.succ))) 0 m ∧
     dihomotopicCovered hX (F.eval (Fraction.ofPos (Nat.succ_pos n.succ))) γ₂ n m := by
   constructor
@@ -433,8 +430,8 @@ lemma dihomotopicCovered_split {x₀ x₁ : X} {γ₁ γ₂ : Dipath x₀ x₁} 
   If `γ₁` and `γ₂` are two directed paths paths such that there is some dihomotopy between them,
   then there are `n m : ℕ` such that `γ₁` and `γ₂` are `n × m`-dihomotopicCovered.
 -/
-lemma dihomotopicCovered_exists_of_preDihomotopic {x₀ x₁ : X} {γ₁ γ₂ : Dipath x₀ x₁}
-  (hX : X₀ ∪ X₁ = univ) (h : γ₁.PreDihomotopic γ₂) (X₀_open : IsOpen X₀) (X₁_open : IsOpen X₁) :
+lemma dihomotopicCovered_exists_of_preDihomotopic (hX : X₀ ∪ X₁ = univ) (h : γ₁.PreDihomotopic γ₂)
+  (X₀_open : IsOpen X₀) (X₁_open : IsOpen X₁) :
     ∃ (n m : ℕ), dihomotopicCovered hX γ₁ γ₂ n m := by
   rcases (DirectedMap.Dihomotopy.coveredPartwise_exists h.some.toDihomotopy hX X₀_open X₁_open) with ⟨n, m, hnm⟩
   exact ⟨n, m, h.some, hnm⟩
