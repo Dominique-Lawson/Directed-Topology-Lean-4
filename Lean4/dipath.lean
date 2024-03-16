@@ -10,8 +10,6 @@ import Lean4.fraction
   * trans : the concatenation of dipaths
   * map : the image of a dipath under a directed map
   * subparam : the monotonic subparametrization of a dipath
-
-  This file follows the structure of https://github.com/leanprover-community/mathlib/blob/master/src/topology/path_connected.lean
 -/
 
 noncomputable section

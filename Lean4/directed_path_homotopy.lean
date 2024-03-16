@@ -10,7 +10,7 @@ import Mathlib.Topology.Homotopy.Path
   We show that this relation is closed under reparametrizations, and that concatenation and directed maps respect it.
 
   Much of the structure of this file is based on the undirected version:
-  https://github.com/leanprover-community/mathlib/blob/master/src/topology/homotopy/path.lean
+  https://github.com/leanprover-community/mathlib4/blob/master/Mathlib/Topology/Homotopy/Path.lean
 -/
 
 universe u v

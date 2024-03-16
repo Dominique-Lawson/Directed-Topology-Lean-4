@@ -7,8 +7,8 @@ import Lean4.stretch_path
   * `Dihomotopy_with f g P` : the type of homotopies between two directed maps `f g : D(X, Y)` satisfying `P : D(X, Y) → Prop` at all intermediate point `t : I`.
   * `Dihomotopy_rel f g S` : the type of homotopies between two directed maps `f g : D(X, Y)` that are fixed on all points of `S : set X`.
 
-  The structure of this file is based on the undirected variant, found at:
-  https://github.com/leanprover-community/mathlib/blob/master/src/topology/homotopy/basic.lean
+  The structure of this file is based on the undirected variant in Mathlib, found at:
+  https://github.com/leanprover-community/mathlib4/blob/master/Mathlib/Topology/Homotopy/Basic.lean
 -/
 
 noncomputable section

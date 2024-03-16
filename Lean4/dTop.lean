@@ -4,8 +4,8 @@ import Mathlib.CategoryTheory.Elementwise
 
 /-
   This file contains the definition of `dTopCat`, the category of directed spaces.
-  The structure of this file is based on the undirected version:
-  https://github.com/leanprover-community/mathlib4/blob/2e153a6391654fa2b82a1258cfa8c38043225969/Mathlib/Topology/Category/TopCat/Basic.lean
+  The structure of this file is based on the approach for the undirected version in Mathlib:
+  https://github.com/leanprover-community/mathlib4/blob/master/Mathlib/Topology/Category/TopCat/Basic.lean
 -/
 
 open DirectedMap
