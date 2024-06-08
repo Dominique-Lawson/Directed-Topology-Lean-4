@@ -103,33 +103,33 @@ lemma compact_unitSquare : IsCompact UnitSquare := isCompact_univ
 
 /--
 For any four natural numbers `n m i j : ℕ` such that `i < n + 1` and `j < m + 1`,
-we have the square `[i/(n+1), (i+1)/(n+1)] × [j/(m+1), (j+1)/(m+1)]` in the unit interval.
+we have the rectangle `[i/(n+1), (i+1)/(n+1)] × [j/(m+1), (j+1)/(m+1)]` in the unit square.
 -/
-def UnitSubsquare {n m i j : ℕ} (hi : i < n.succ) (hj : j < m.succ) : Set (I × I) :=  setOf $
+def UnitSubrectangle {n m i j : ℕ} (hi : i < n.succ) (hj : j < m.succ) : Set (I × I) :=  setOf $
   fun (a : I × I) =>
     ((Fraction (Nat.succ_pos n) (le_of_lt hi)) ≤ a.1 ∧ a.1 ≤ (Fraction (Nat.succ_pos n) (Nat.succ_le_of_lt hi))) ∧
     (Fraction (Nat.succ_pos m) (le_of_lt hj)) ≤ a.2 ∧ a.2 ≤ (Fraction (Nat.succ_pos m) (Nat.succ_le_of_lt hj))
 
-namespace UnitSubsquare
+namespace UnitSubrectangle
 
 open Set
 
-lemma mem_unitSquare (t : I × I) : t ∈ UnitSubsquare zero_lt_one zero_lt_one := by
-  unfold UnitSubsquare
+lemma mem_unitSquare (t : I × I) : t ∈ UnitSubrectangle zero_lt_one zero_lt_one := by
+  unfold UnitSubrectangle
   rw [Fraction.eq_zero, Fraction.eq_one]
   exact ⟨⟨t.1.2.1, t.1.2.2⟩, ⟨t.2.2.1, t.2.2.2⟩⟩
 
-lemma mem_unitSubsquare {t₀ t₁ : ℝ} {n m i j : ℕ} (hi : i < n.succ) (hj : j < m.succ)
+lemma mem_unitSubrectangle {t₀ t₁ : ℝ} {n m i j : ℕ} (hi : i < n.succ) (hj : j < m.succ)
   (ht₀ : t₀ ∈ Icc ((i : ℝ)/↑(n.succ)) (↑(i+1)/↑(n.succ))) (ht₁ : t₁ ∈ Icc ((j : ℝ)/↑(m.succ)) (↑(j+1)/↑(m.succ))) :
     ((⟨t₀, UnitIntervalSub.mem_I_of_mem_interval hi ht₀⟩ : I),
-      (⟨t₁, UnitIntervalSub.mem_I_of_mem_interval hj ht₁⟩ : I)) ∈ UnitSubsquare hi hj :=
+      (⟨t₁, UnitIntervalSub.mem_I_of_mem_interval hj ht₁⟩ : I)) ∈ UnitSubrectangle hi hj :=
   ⟨⟨ht₀.1, ht₀.2⟩, ⟨ht₁.1, ht₁.2⟩⟩
 
-end UnitSubsquare
+end UnitSubrectangle
 
 theorem lebesgue_number_lemma_unit_square {ι : Sort u} {c : ι → Set (I × I)}
   (hc₁ : ∀ (i : ι), IsOpen (c i)) (hc₂ : UnitSquare ⊆ (⋃ (i : ι), c i)) :
-    ∃ (n : ℕ), ∀ (i j : ℕ) (hi : i < n.succ) (hj : j < n.succ), ∃ (a : ι), UnitSubsquare hi hj ⊆ c a := by
+    ∃ (n : ℕ), ∀ (i j : ℕ) (hi : i < n.succ) (hj : j < n.succ), ∃ (a : ι), UnitSubrectangle hi hj ⊆ c a := by
   rcases (lebesgue_number_lemma_of_metric (compact_unitSquare) hc₁ hc₂) with ⟨δ, δ_pos, hδ⟩
   rcases Real.instArchimedean.arch 2 δ_pos with ⟨n, hn⟩
 

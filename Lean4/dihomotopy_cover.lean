@@ -3,7 +3,7 @@ import Lean4.split_dihomotopy
 
 /-
   This file contains the definition of a (n, m)-covered (dipath) dihomotopy, covered by X₁ and X₂:
-      It maps all subsquares  [i/n, (i+1)/n] × [j/m, (j+1)/m] into either X₁ or X₂
+      It maps all subrectangles  [i/n, (i+1)/n] × [j/m, (j+1)/m] into either X₁ or X₂
 
   Conditions for being (n, m)-covered are given.
 
@@ -31,7 +31,7 @@ def covered (F : Dihomotopy f g) (_ : X₀ ∪ X₁ = univ) : Prop := range F �
 -/
 def coveredPartwise (_ : X₀ ∪ X₁ = univ) (F : Dihomotopy f g) (n m : ℕ) : Prop :=
   ∀ (i j : ℕ) (hi : i < n.succ) (hj : j < m.succ),
-    F '' (UnitSubsquare hi hj) ⊆ X₀ ∨ F '' (UnitSubsquare hi hj) ⊆ X₁
+    F '' (UnitSubrectangle hi hj) ⊆ X₀ ∨ F '' (UnitSubrectangle hi hj) ⊆ X₁
 
 /--
   A dihomotopy that can be covered partwise by `1 × 1` squares is covered.
@@ -44,12 +44,12 @@ lemma covered_of_coveredPartwise {F : Dihomotopy f g} {hX : X₀ ∪ X₁ = univ
     left
     rintro x ⟨⟨t₀, t₁⟩, ht⟩
     rw [←ht]
-    exact h ⟨(t₀, t₁), UnitSubsquare.mem_unitSquare _, rfl⟩
+    exact h ⟨(t₀, t₁), UnitSubrectangle.mem_unitSquare _, rfl⟩
   case inr h =>
     right
     rintro x ⟨⟨t₀, t₁⟩, ht⟩
     rw [←ht]
-    exact h ⟨(t₀, t₁), UnitSubsquare.mem_unitSquare _, rfl⟩
+    exact h ⟨(t₀, t₁), UnitSubrectangle.mem_unitSquare _, rfl⟩
 
 /--
 If `F : f ∼ g` is a dihomotopy of directed maps, then the image of `f` restricted to `[i/(m+1), (i+1)/(m+1)]`
@@ -57,13 +57,13 @@ is contained in the image of `F` restricted to `[0, 1/(n+1)] × [i/(m+1), (i+1)/
 -/
 lemma left_path_image_interval_subset_of_dihomotopy_subset (F : Dihomotopy f g) (n : ℕ) {i m : ℕ} (hi : i < m.succ) :
     (Dipath.of_directedMap f).toPath.extend '' Icc (↑i / (↑m + 1)) ((↑i + 1) / (↑m + 1)) ⊆
-      F ''  UnitSubsquare (Nat.succ_pos n) hi := by
+      F ''  UnitSubrectangle (Nat.succ_pos n) hi := by
   rintro x ⟨t, ⟨ht, rfl⟩⟩
   have tI : t ∈ I := UnitIntervalSub.mem_I_of_mem_interval_coed hi ht
   rw [Path.extend_extends (Dipath.of_directedMap f).toPath tI]
   use (0, ⟨t, tI⟩)
   constructor
-  · apply UnitSubsquare.mem_unitSubsquare
+  · apply UnitSubrectangle.mem_unitSubrectangle
     constructor
     · norm_num
     · apply div_nonneg
@@ -94,13 +94,13 @@ is contained in the image of `F` restricted to `[n/(n+1), 1] × [i/(m+1), (i+1)/
 -/
 lemma right_path_image_interval_subset_of_dihomotopy_subset (F : Dihomotopy f g) (n : ℕ) {i m : ℕ} (hi : i < m.succ) :
     (Dipath.of_directedMap g).toPath.extend '' Icc (↑i / (↑m + 1)) ((↑i + 1) / (↑m + 1)) ⊆
-      F ''  UnitSubsquare (Nat.lt_succ_self n) hi := by
+      F ''  UnitSubrectangle (Nat.lt_succ_self n) hi := by
   rintro x ⟨t, ⟨ht, rfl⟩⟩
   have tI : t ∈ I := UnitIntervalSub.mem_I_of_mem_interval_coed hi ht
   rw [Path.extend_extends (Dipath.of_directedMap g).toPath tI]
   use (1, ⟨t, tI⟩)
   constructor
-  · apply UnitSubsquare.mem_unitSubsquare
+  · apply UnitSubrectangle.mem_unitSubrectangle
     · constructor
       · exact (div_le_one (show (n.succ : ℝ) > 0 by
           exact Nat.cast_pos.mpr (Nat.succ_pos n))).mpr (Nat.cast_le.mpr (Nat.le_succ n))
@@ -162,17 +162,17 @@ lemma coveredPartwise_exists (F : Dihomotopy f g) (hX : X₀ ∪ X₁ = univ) (X
     case neg h => right; simp [h] at hι; exact Set.image_subset_iff.mpr hι
 
 /--
-  The image of a dihomotopy F of the square `[0, 1/(n+2)] × [j/(m+1), (j+1)/(m+1)]`
+  The image of a dihomotopy F of the subrectangles `[0, 1/(n+2)] × [j/(m+1), (j+1)/(m+1)]`
   contains the image of the first part of F, split at `1/(n+2)`, of `[0, 1] × [j/(m+1), (j+1)/(m+1)]`.
 -/
-lemma fpv_subsquare {x y : X} {γ₁ γ₂ : Dipath x y} {F : Dipath.Dihomotopy γ₁ γ₂} {n m j : ℕ} (hj : j < m.succ) :
+lemma fpv_subrectangle {x y : X} {γ₁ γ₂ : Dipath x y} {F : Dipath.Dihomotopy γ₁ γ₂} {n m j : ℕ} (hj : j < m.succ) :
     (SplitDihomotopy.FirstPartVerticallyDihomotopy F (Fraction.ofPos (Nat.succ_pos n.succ))).toDihomotopy ''
-    (UnitSubsquare zero_lt_one hj) ⊆ F '' (UnitSubsquare (Nat.zero_lt_succ n.succ) hj) := by
+    (UnitSubrectangle zero_lt_one hj) ⊆ F '' (UnitSubrectangle (Nat.zero_lt_succ n.succ) hj) := by
   rintro z ⟨⟨t₀, t₁⟩, ⟨tI, ht⟩⟩
   have : ((SplitDihomotopy.FirstPartVerticallyDihomotopy F _).toDihomotopy) (t₀, t₁) =
     (SplitDihomotopy.FirstPartVerticallyDihomotopy F (Fraction.ofPos (Nat.succ_pos n.succ))) (t₀, t₁) := rfl
   rw [this, SplitDihomotopy.fpv_apply] at ht
-  show ∃ a, a ∈ UnitSubsquare _ hj ∧ F a = z
+  show ∃ a, a ∈ UnitSubrectangle _ hj ∧ F a = z
   refine' ⟨_, _, ht⟩
   constructor
   constructor
@@ -193,8 +193,8 @@ lemma coveredPartwise_first_vpart {x y : X} {γ₁ γ₂ : Dipath x y} {F : Dipa
   intros i j hi hj
   obtain ⟨rfl⟩ : i = 0 := by linarith
   cases (hF 0 j (Nat.succ_pos n.succ) hj)
-  case refl.inl h => left; exact subset_trans (fpv_subsquare _) h
-  case refl.inr h => right; exact subset_trans (fpv_subsquare _) h
+  case refl.inl h => left; exact subset_trans (fpv_subrectangle _) h
+  case refl.inr h => right; exact subset_trans (fpv_subrectangle _) h
 
 /--
   If `i/(n+1) ≤ t`, then `(i+1)/(n+2) ≤ (σ q) * t + q`, where `q = 1/(n+2)`
@@ -273,18 +273,18 @@ lemma spv_aux₂ {t : I} {n i : ℕ} (hi : i < n.succ) (ht : t ≤ Fraction (Nat
   congr 1 <;> rw [Nat.cast_succ, Nat.cast_succ] <;> linarith
 
 /--
-  The image of a dihomotopy F of the subsquare `[(i+1)/(n+2), (i+2)/(n+2)] × [j/(m+1), (j+1)/(m+1)]`
+  The image of a dihomotopy F of the subrectangle `[(i+1)/(n+2), (i+2)/(n+2)] × [j/(m+1), (j+1)/(m+1)]`
   contains the image of the second part of F, split at `1/(n+2)`, of `[i/(n+1), (i+1)/(n+1)] × [j/(m+1), (j+1)/(m+1)]`.
 -/
-lemma spv_subsquare {x y : X} {γ₁ γ₂ : Dipath x y} {F : Dipath.Dihomotopy γ₁ γ₂} {n m i j : ℕ}
+lemma spv_subrectangle {x y : X} {γ₁ γ₂ : Dipath x y} {F : Dipath.Dihomotopy γ₁ γ₂} {n m i j : ℕ}
   (hi : i < n.succ) (hj : j < m.succ) :
     (SplitDihomotopy.SecondPartVerticallyDihomotopy F (Fraction.ofPos (Nat.succ_pos n.succ))).toDihomotopy ''
-    (UnitSubsquare hi hj) ⊆ F '' (UnitSubsquare (Nat.succ_lt_succ hi) hj) := by
+    (UnitSubrectangle hi hj) ⊆ F '' (UnitSubrectangle (Nat.succ_lt_succ hi) hj) := by
   rintro z ⟨⟨t₀, t₁⟩, ⟨tI, ht⟩⟩
   have : ((SplitDihomotopy.SecondPartVerticallyDihomotopy F _).toDihomotopy) (t₀, t₁) =
           (SplitDihomotopy.SecondPartVerticallyDihomotopy F (Fraction.ofPos (Nat.succ_pos n.succ))) (t₀, t₁) := rfl
   rw [this, SplitDihomotopy.spv_apply] at ht
-  show ∃ a, a ∈ UnitSubsquare _ hj ∧ F a = z
+  show ∃ a, a ∈ UnitSubrectangle _ hj ∧ F a = z
   refine' ⟨_, _, ht⟩
   constructor
   constructor
@@ -303,19 +303,19 @@ lemma coveredPartwise_second_vpart {x y : X} {γ₁ γ₂ : Dipath x y} {F : Dip
   unfold coveredPartwise
   intros i j hi hj
   cases (hF i.succ j (Nat.succ_lt_succ hi) hj)
-  case inl h => left; exact subset_trans (spv_subsquare _ _) h
-  case inr h => right; exact subset_trans (spv_subsquare _ _) h
+  case inl h => left; exact subset_trans (spv_subrectangle _ _) h
+  case inr h => right; exact subset_trans (spv_subrectangle _ _) h
 
 /--
-  The image of a dihomotopy F of the square `[i/(n+1), (i+1)/(n+1)] × [0, 1/(m+2)]`
+  The image of a dihomotopy F of the rectangle `[i/(n+1), (i+1)/(n+1)] × [0, 1/(m+2)]`
   contains the image of the first part of F, split at `1/(m+2)`, of `[i/(n+1), (i+1)/(n+1)] × [0, 1]`.
 -/
-lemma fph_subsquare {f g : D(I, X)} {F : Dihomotopy f g} {n m i : ℕ} (hi : i < n.succ) :
+lemma fph_subrectangle {f g : D(I, X)} {F : Dihomotopy f g} {n m i : ℕ} (hi : i < n.succ) :
     (SplitDihomotopy.FirstPartHorizontallyDihomotopy F (Fraction.ofPos (Nat.succ_pos m.succ))) ''
-      (UnitSubsquare hi zero_lt_one) ⊆ F '' (UnitSubsquare hi (Nat.succ_pos m.succ)) := by
+      (UnitSubrectangle hi zero_lt_one) ⊆ F '' (UnitSubrectangle hi (Nat.succ_pos m.succ)) := by
   rintro z ⟨⟨t₀, t₁⟩, ⟨tI, ht⟩⟩
   rw [SplitDihomotopy.fph_apply] at ht
-  show ∃ a, a ∈ UnitSubsquare hi _ ∧ F a = z
+  show ∃ a, a ∈ UnitSubrectangle hi _ ∧ F a = z
   refine' ⟨_, _, ht⟩
   constructor
   · exact tI.1
@@ -336,20 +336,20 @@ lemma coveredPartwise_first_hpart {f g : D(I, X)} {F : Dihomotopy f g} {hX : X�
   intros i j hi hj
   obtain ⟨rfl⟩ : j = 0 := by linarith
   cases (hF i 0 hi (Nat.succ_pos m.succ))
-  case refl.inl h => left; exact subset_trans (fph_subsquare _) h
-  case refl.inr h => right; exact subset_trans (fph_subsquare _) h
+  case refl.inl h => left; exact subset_trans (fph_subrectangle _) h
+  case refl.inr h => right; exact subset_trans (fph_subrectangle _) h
 
 /--
-  The image of a dihomotopy F of the square `[i/(n+1), (i+1)/(n+1)] × [(j+1)/(m+2), (j+2)/(m+2)]`
+  The image of a dihomotopy F of the rectangle `[i/(n+1), (i+1)/(n+1)] × [(j+1)/(m+2), (j+2)/(m+2)]`
   contains the image of the second part of F, split at `1/(m+2)`, of
   `[i/(n+1), (i+1)/(n+1)] × [j/(m+1), (j+1)/(m+1)]`.
 -/
-lemma sph_subsquare {f g : D(I, X)} {F : Dihomotopy f g} {n m i j : ℕ} (hi : i < n.succ) (hj : j < m.succ) :
+lemma sph_subrectangle {f g : D(I, X)} {F : Dihomotopy f g} {n m i j : ℕ} (hi : i < n.succ) (hj : j < m.succ) :
     (SplitDihomotopy.SecondPartHorizontallyDihomotopy F (Fraction.ofPos (Nat.succ_pos m.succ))) ''
-      (UnitSubsquare hi hj) ⊆ F '' (UnitSubsquare hi (Nat.succ_lt_succ hj)) := by
+      (UnitSubrectangle hi hj) ⊆ F '' (UnitSubrectangle hi (Nat.succ_lt_succ hj)) := by
   rintro z ⟨⟨t₀, t₁⟩, ⟨tI, ht⟩⟩
   rw [SplitDihomotopy.sph_apply] at ht
-  show ∃ a, a ∈ UnitSubsquare hi _ ∧ F a = z
+  show ∃ a, a ∈ UnitSubrectangle hi _ ∧ F a = z
   refine' ⟨_, _, ht⟩
   constructor
   · exact tI.1
@@ -368,8 +368,8 @@ lemma coveredPartwise_second_hpart {f g : D(I, X)} {F : Dihomotopy f g} {hX : X�
   unfold coveredPartwise
   intros i j hi hj
   cases (hF i j.succ hi (Nat.succ_lt_succ hj))
-  case inl h => left; exact subset_trans (sph_subsquare _ _) h
-  case inr h => right; exact subset_trans (sph_subsquare _ _) h
+  case inl h => left; exact subset_trans (sph_subrectangle _ _) h
+  case inr h => right; exact subset_trans (sph_subrectangle _ _) h
 
 end Dihomotopy
 end DirectedMap
